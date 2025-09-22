@@ -1,39 +1,56 @@
-name: TornadoAI CI
+name: Build Android APK
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then
-          pip install -r requirements.txt
-        fi
+      - name: Set up Android SDK
+        id: android
+        uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platform-tools
+            platforms;android-34
+            build-tools;34.0.0
+          cmdline-tools-version: 12266719
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: true
 
-    - name: Run SQLite migrations
-      run: |
-        DB=corpus.db
-        touch "$DB"
-        for f in migrations/*.sql; do
-          [ -f "$f" ] && sqlite3 "$DB" < "$f" || true
-        done
+      # 👇 Force-accept ALL licenses non-interactively
+      - name: Accept SDK licenses (non-interactive)
+        run: yes | "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" --licenses
 
-    - name: Run smoke test
-      run: |
-        python -m tornadoai.daily_brief || true
+      # 👇 Reinstall requested packages non-interactively (belt & suspenders)
+      - name: Ensure required SDK packages
+        run: |
+          yes | "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" \
+            "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.7
+
+      - name: Build release APK
+        working-directory: android
+        run: gradle :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: TornadoAI-APK
+          path: android/app/build/outputs/apk/release/*.apk
