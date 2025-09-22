@@ -1,0 +1,186 @@
+# ensure schema is present/up-to-date
+import os, sys
+sys.path.insert(0, os.path.dirname(__file__) or ".")
+import migrate
+migrate.ensure(os.path.join(os.path.dirname(__file__) or ".", "corpus.db"))
+
+#!/data/data/com.termux/files/usr/bin/python3
+import os, sys, re, time, json, sqlite3, hashlib, html, urllib.request, subprocess, tempfile
+
+ROOT = "/storage/emulated/0/Download/TornadoAI"
+DB   = os.path.join(ROOT, "corpus.db")
+CACHE= os.path.join(ROOT, "cache")
+PDFDIR=os.path.join(ROOT, "pdfs")
+
+os.makedirs(CACHE, exist_ok=True)
+
+UA={"User-Agent":"Mozilla/5.0"}
+BADLOG=os.path.join(ROOT,'bad_pdfs.log')
+def log_bad(url,msg):
+    try:
+        with open(BADLOG,'a',encoding='utf-8') as f:
+            f.write(f"{url}\t{msg}\n")
+    except: pass
+
+def sha256_bytes(b:bytes)->str: return hashlib.sha256(b).hexdigest()
+def fetch(url:str)->bytes:
+    req=urllib.request.Request(url, headers=UA)
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.read()
+
+def is_pdf_bytes(b:bytes)->bool: return b[:8].lower().startswith(b"%pdf")
+def save_cache(path, b): open(path,"wb").write(b)
+
+def text_from_html(b:bytes)->str:
+    t=b.decode("utf-8","ignore")
+    # crude strip of tags/scripts/styles
+    t=re.sub(r"(?is)<script[^>]*>.*?</script>"," ",t)
+    t=re.sub(r"(?is)<style[^>]*>.*?</style>"," ",t)
+    t=re.sub(r"(?is)<[^>]+>"," ",t)
+    t=html.unescape(t)
+    t=re.sub(r"\s+"," ",t).strip()
+    return t
+
+def ocr_pdf_to_text(pdf_path:str)->list[str]:
+    out=[]
+    try:
+        import subprocess, tempfile
+        # render each page to PPM and OCR
+        info=subprocess.check_output(['pdfinfo', pdf_path], timeout=20, stderr=subprocess.DEVNULL).decode('utf-8','ignore')
+        import re
+        m=re.search(r'Pages:\s+(\d+)', info)
+        pages=int(m.group(1)) if m else 0
+        for p in range(1, pages+1):
+            base=f"/tmp/ocr_{os.getpid()}_{p}"
+            try:
+                subprocess.run(['pdftoppm','-f',str(p),'-l',str(p),'-r','200',pdf_path,base], check=True, timeout=60, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                # pdftoppm produces base-1.ppm etc.
+                img=f"{base}-1.ppm"
+                txt=f"{base}.txt"
+                subprocess.run(['tesseract',img,base,'-l','eng'], check=True, timeout=120, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                with open(txt,'r',encoding='utf-8',errors='ignore') as fh:
+                    t=re.sub(r'\s+',' ',fh.read()).strip()
+                    out.append(t)
+            except Exception:
+                pass
+            finally:
+                for ext in ('-1.ppm','.txt'): 
+                    f=f"{base}{ext}"
+                    try: os.remove(f)
+                    except: pass
+    except Exception:
+        return []
+    return out
+
+def pdf_pages_to_text(pdf_path:str)->list[str]:
+    # use pdftotext page by page
+    out=[]
+    try:
+        # get page count
+        pinfo=subprocess.check_output(["pdfinfo", pdf_path], timeout=20, stderr=subprocess.DEVNULL).decode("utf-8","ignore")
+        m=re.search(r"Pages:\s+(\d+)", pinfo)
+        pages=int(m.group(1)) if m else 0
+        for p in range(1, pages+1):
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as tf:
+                tfp=tf.name
+            try:
+                subprocess.run(["pdftotext","-enc","UTF-8","-f",str(p),"-l",str(p),pdf_path,tfp],
+                               check=True, timeout=25,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                txt=open(tfp,"r",encoding="utf-8",errors="ignore").read()
+                txt=re.sub(r"\s+"," ",txt).strip()
+                out.append(txt)
+            finally:
+                try: os.remove(tfp)
+                except: pass
+    except Exception as e:
+        # fallback: whole doc
+        try:
+            full=subprocess.check_output(["pdftotext","-enc","UTF-8", pdf_path, "-"], timeout=40).decode("utf-8","ignore")
+            full=re.sub(r"\s+"," ",full).strip()
+            out=[full] if full else []
+        except:
+            out=[]
+    return out
+
+def short_summary(pages:list[str], limit_chars=600)->str:
+    joined=" ".join(p for p in pages if p).strip()
+    if not joined: return ""
+    # crude sentence split
+    parts=re.split(r"(?<=[\.\!\?])\s+", joined)
+    s=[]
+    for sent in parts:
+        if not sent: continue
+        s.append(sent)
+        if sum(len(x) for x in s) > limit_chars: break
+    return " ".join(s)[:limit_chars]
+
+def upsert_doc(c, url, title, content, kind, page_count):
+    ts=int(time.time())
+    sha=sha256_bytes((title or "").encode()+ (content or "").encode())
+    c.execute("""INSERT OR REPLACE INTO docs(url,title,content,ts_utc,source_trust,sha256,kind,page_count)
+                 VALUES(?,?,?,?,?,?,?,?)""",
+              (url, title or "", content or "", ts, 70, sha, kind, page_count))
+
+def clear_pages(c, url):
+    c.execute("DELETE FROM doc_pages WHERE url=?",(url,))
+
+def insert_page(c, url, page_no, text):
+    c.execute("INSERT INTO doc_pages(url,page_no,text) VALUES(?,?,?)",(url,page_no,text or ""))
+
+def upsert_summary(c, url, summary):
+    c.execute("INSERT OR REPLACE INTO doc_summaries(url,summary,ts_utc) VALUES(?,?,?)",(url, summary or "", int(time.time())))
+
+def handle_url(c, url:str)->int:
+    try:
+        b=fetch(url)
+    except Exception as e:
+        return 0
+    added=0
+    if is_pdf_bytes(b):
+        # cache to file (stable name)
+        h=sha256_bytes(b)[:16]
+        pdf_path=os.path.join(CACHE, f"{h}.pdf")
+        save_cache(pdf_path,b)
+        pages=pdf_pages_to_text(pdf_path)
+        if not pages:
+            pages=ocr_pdf_to_text(pdf_path)
+        if not pages:
+            log_bad(url, "no_text_extracted")
+        title=os.path.basename(pdf_path)
+        upsert_doc(c, url, title, pages[0] if pages else "", "pdf", len(pages))
+        clear_pages(c, url)
+        for i,txt in enumerate(pages, start=1):
+            insert_page(c, url, i, txt)
+        upsert_summary(c, url, short_summary(pages))
+        added=1
+    else:
+        # HTML
+        t=text_from_html(b)
+        title=re.search(r"<title>(.*?)</title>", b.decode("utf-8","ignore"), re.I|re.S)
+        ttl= (title.group(1).strip() if title else url)
+        upsert_doc(c, url, ttl, t, "html", 1)
+        clear_pages(c, url)
+        insert_page(c, url, 1, t)
+        upsert_summary(c, url, short_summary([t]))
+        added=1
+    return added
+
+def main():
+    src=os.path.join(ROOT,"sources.txt")
+    if not os.path.exists(src):
+        print(json.dumps({"error":"sources.txt missing"})); return
+    urls=[ln.strip() for ln in open(src,"r",encoding="utf-8",errors="ignore") if ln.strip() and not ln.strip().startswith("#")]
+    total=0
+    with sqlite3.connect(DB) as c:
+        c.execute("PRAGMA foreign_keys=ON;")
+        c.execute("BEGIN IMMEDIATE;")
+        try:
+            for u in urls:
+                total+=handle_url(c,u)
+            c.execute("COMMIT;")
+        except Exception as e:
+            c.execute("ROLLBACK;")
+            print(json.dumps({"error":str(e)})); return
+    print(json.dumps({"ok":True,"added":total}))
+if __name__=="__main__": main()

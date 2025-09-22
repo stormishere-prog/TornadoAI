@@ -1,0 +1,24 @@
+# ===== U.S. straight/major wires =====
+https://feeds.apnews.com/apf-topnews
+https://www.reuters.com/rssFeed/topNews
+https://www.npr.org/rss/rss.php?id=1001
+
+# ===== U.S. center/right & indie =====
+https://www.wsj.com/news/rss-news-and-features
+https://www.nationalreview.com/feed/
+https://www.thebulwark.com/feed/
+https://reason.com/feed/
+https://theintercept.com/feed/
+
+# ===== U.S. left/progressive =====
+https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml
+https://www.theguardian.com/us-news/rss
+https://www.motherjones.com/feed/
+
+# ===== Foreign / geopolitics =====
+https://www.aljazeera.com/xml/rss/all.xml
+https://www.bbc.com/news/world/rss.xml
+https://www.ft.com/world?format=rss
+https://www.rferl.org/api/ziqyqevtiuqv
+https://www.france24.com/en/rss
+https://www.scmp.com/rss/91/feed

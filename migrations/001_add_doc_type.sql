@@ -1,0 +1,4 @@
+PRAGMA foreign_keys=OFF;
+BEGIN;
+ALTER TABLE docs ADD COLUMN doc_type TEXT DEFAULT '' ;
+COMMIT;

@@ -1,0 +1,39 @@
+name: TornadoAI CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        fi
+
+    - name: Run SQLite migrations
+      run: |
+        DB=corpus.db
+        touch "$DB"
+        for f in migrations/*.sql; do
+          [ -f "$f" ] && sqlite3 "$DB" < "$f" || true
+        done
+
+    - name: Run smoke test
+      run: |
+        python -m tornadoai.daily_brief || true

@@ -1,0 +1,95 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TornadoAI — Chat / Feed (Preview)</title>
+<style>
+  :root { --bg:#0b0f14; --fg:#e8eef6; --muted:#9db0c8; --card:#111722; --border:#1a2636; --accent:#5fb3ff; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  header{position:sticky;top:0;background:#0b0f14f2;border-bottom:1px solid var(--border);backdrop-filter:blur(6px)}
+  .tabs{display:flex;gap:8px;padding:10px}
+  .tabbtn{padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:#0f1621;color:var(--fg);text-decoration:none}
+  .tabbtn.active{background:var(--card);border-color:#26405f}
+  main{max-width:1100px;margin:0 auto;padding:12px}
+  /* Chat pane */
+  .chat-wrap{display:grid;grid-template-rows:auto 1fr auto;gap:10px;min-height:calc(100vh - 80px)}
+  .chat-stream{border:1px solid var(--border);border-radius:14px;background:var(--card);padding:10px;overflow:auto}
+  .msg{margin:8px 0;padding:10px;border-radius:10px}
+  .me{background:#14202e}
+  .ai{background:#151c29}
+  .meta{color:var(--muted);font-size:12px;margin-bottom:4px}
+  .composer{display:flex;gap:8px}
+  .composer textarea{flex:1;min-height:70px;resize:vertical;border:1px solid var(--border);border-radius:12px;background:#0f1621;color:var(--fg);padding:10px}
+  .composer button{padding:10px 14px;border-radius:12px;border:1px solid #2a3f58;background:var(--accent);color:#001a2e}
+  /* Feed pane (placeholder for now) */
+  .card{border:1px solid var(--border);border-radius:14px;background:var(--card);padding:12px}
+  .hint{color:var(--muted)}
+  /* Hide/show tabs */
+  .pane{display:none}
+  .pane.active{display:block}
+</style>
+
+<header>
+  <nav class="tabs">
+    <a id="tab-chat" class="tabbtn active" href="#chat" onclick="showPane('chat')">Chat</a>
+    <a id="tab-feed" class="tabbtn" href="#feed" onclick="showPane('feed')">Feed</a>
+  </nav>
+</header>
+
+<main>
+  <!-- CHAT VIEW (default) -->
+  <section id="pane-chat" class="pane active">
+    <div class="chat-wrap">
+      <div class="chat-stream" id="chat-stream">
+        <div class="msg ai">
+          <div class="meta">Model • just now</div>
+          <div>Welcome. This is a static preview of the chat layout.</div>
+        </div>
+        <div class="msg me">
+          <div class="meta">You • just now</div>
+          <div>Looks clean. Where’s the feed?</div>
+        </div>
+        <div class="msg ai">
+          <div class="meta">Model • just now</div>
+          <div>Tap the “Feed” tab above. In this preview, it will show a simple placeholder.</div>
+        </div>
+      </div>
+      <div class="composer">
+        <textarea placeholder="Type a message… (preview only)"></textarea>
+        <button type="button" onclick="alert('Preview only')">Send</button>
+      </div>
+    </div>
+    <nav class="tabs bottom">
+      <a id="tab-chat-b" class="tabbtn active" href="#chat" onclick="showPane(\"chat\")">Chat</a>
+      <a id="tab-feed-b" class="tabbtn" href="#feed" onclick="showPane(\"feed\")">Feed</a>
+    </nav>
+  </section>
+
+  <!-- FEED VIEW (placeholder; we’ll wire to your feed_preview.html next) -->
+  <section id="pane-feed" class="pane">
+    <div class="card">
+      <h2 style="margin:8px 0 4px 0;">Feed (Preview)</h2>
+      <p class="hint">For now this is a simple link to the horizontal feed preview you generated.</p>
+      <p><a href="feed_preview.html" style="color:var(--accent);">Open Feed Preview</a></p>
+      <!-- If you want it embedded right here, uncomment the iframe below.
+      <iframe src="feed_preview.html" style="width:100%;height:70vh;border:1px solid var(--border);border-radius:12px;"></iframe>
+      -->
+    </div>
+    <nav class="tabs bottom">
+      <a id="tab-chat-b2" class="tabbtn" href="#chat" onclick="showPane(\"chat\")">Chat</a>
+      <a id="tab-feed-b2" class="tabbtn active" href="#feed" onclick="showPane(\"feed\")">Feed</a>
+    </nav>
+  </section>
+</main>
+
+<script>
+  function showPane(name){
+    document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tabbtn').forEach(t=>t.classList.remove('active'));
+    document.getElementById('pane-'+name).classList.add('active');
+    document.getElementById('tab-'+name).classList.add('active');
+    history.replaceState(null,'','#'+name);
+  }
+  // open from hash (so you can deep-link to #feed)
+  if (location.hash === '#feed') showPane('feed');
+</script>

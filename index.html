@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TORNADOAI</title>
+<style>
+:root{--bg:#000;--fg:#fff;--dim:#bbb;--card:#111;--gap:12px}
+html,body{background:var(--bg);color:var(--fg);margin:0;padding:0;font-family:system-ui,Segoe UI,Roboto}
+.container{display:flex;flex-direction:column;height:100dvh}
+#banner{flex:0 0 auto;padding:8px 10px;background:#0a0a0a;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:10px}
+#qa{flex:1 1 auto;overflow:auto;padding:12px}
+#reply{flex:0 0 auto;border-top:1px solid #1a1a1a;padding:8px;background:#0a0a0a}
+.left,.center,.right{flex:1;display:flex;align-items:center}
+.left{justify-content:flex-start;font-family:ui-monospace,monospace;font-size:12px;color:var(--dim)}
+.center{justify-content:center;font-weight:700;letter-spacing:1px}
+.right{justify-content:flex-end;gap:18px}
+.stat{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1}
+.stat label{color:var(--dim);font-size:11px}
+.stat .val{font-family:ui-monospace,monospace;font-size:12px}
+.msg{max-width:860px;margin:0 auto var(--gap);padding:10px 12px;background:var(--card);border-radius:10px;border:1px solid #1e1e1e}
+.msg.me{outline:1px solid #2a2a2a}
+.msg h5{margin:0 0 6px;font-size:12px;color:var(--dim);font-weight:600;letter-spacing:.3px}
+.msg p{margin:0;white-space:pre-wrap;word-wrap:break-word}
+.bar{max-width:860px;margin:0 auto;display:flex;gap:8px}
+textarea{flex:1;resize:none;min-height:42px;max-height:35dvh;padding:10px;border-radius:10px;background:#0d0d0d;color:#fff;border:1px solid #1e1e1e;outline:none;font:14px system-ui}
+button{flex:0 0 auto;padding:10px 14px;border-radius:10px;background:#151515;color:#fff;border:1px solid #2a2a2a;font-weight:700;cursor:pointer}
+button:active{transform:translateY(1px)}
+<style> .right{flex-direction:column;align-items:flex-end;gap:6px} .stat{display:flex;flex-direction:row;align-items:baseline;gap:6px} .stat label{min-width:36px;text-align:right} </style>
+</style></head><body>
+<div class="container">
+  <div id="banner">
+    <div class="left"><span id="clock">--:-- --</span></div>
+    <div class="center">TORNADOAI🌪</div>
+    <div class="right" style="flex-direction:column;align-items:flex-end;gap:6px">
+      <div class="stat"><label>CPU</label><div class="val" id="cpu">--%</div></div>
+      <div class="stat"><label>MEM</label><div class="val" id="mem">--%</div></div>
+    </div>
+  </div>
+  <div id="qa"></div>
+  <div id="reply"><div class="bar">
+    <textarea id="input" placeholder="Type here…"></textarea>
+    <button id="send" title="Send">➤</button>
+  </div></div>
+</div>
+<script>
+const API=(p)=>`${location.origin}`, qa=document.getElementById('qa');
+function addMsg(role,text){const d=document.createElement('div');d.className='msg '+(role==='me'?'me':'bot');d.innerHTML=`<h5>${role==='me'?'You':'TornadoAI'}</h5><p></p>`;d.querySelector('p').textContent=text;qa.appendChild(d);qa.scrollTop=qa.scrollHeight;}
+function tickClock(){const d=new Date();let h=d.getHours(),m=String(d.getMinutes()).padStart(2,'0');const ap=h>=12?'PM':'AM';h=h%12||12;document.getElementById('clock').textContent=`${h}:${m} ${ap}`;}
+setInterval(tickClock,1000);tickClock();
+async function refreshStats(){try{const r=await fetch(API('/api/sys/cpu_mem'));const j=await r.json();document.getElementById('cpu').textContent=(j.cpu??0)+'%';document.getElementById('mem').textContent=(j.mem??0)+'%';}catch{}}
+setInterval(refreshStats,1500);refreshStats();
+async function ask(q){const r=await fetch(API('/api/ask'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,web:true})});const j=await r.json();const head=(j.label==='FACT'?`FACT (${j.confidence}%)`:`GUESS — ${j.confidence}%`);let out=`${head}\n${j.answer||''}`;if(j.citations&&j.citations.length){out+=`\n\nCitations:\n`+j.citations.map(c=>`• ${c.title||'(untitled)'} — ${c.url}`).join('\n');}addMsg('bot',out);}
+async function handleSend(){const el=document.getElementById('input');const q=el.value.trim().replace(/\s+/g,' ');if(!q)return;addMsg('me',q);el.value='';try{await ask(q);}catch(e){addMsg('bot','Error: '+e.message);}}
+document.getElementById('send').onclick=handleSend;
+document.getElementById('input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();}});
+</script>
+</body></html>

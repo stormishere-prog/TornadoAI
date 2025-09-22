@@ -1,0 +1,17 @@
+  <div id="feed_container"><div style="opacity:.7;padding:12px;">Loading feed…</div></div>
+  <script>
+    (function(){
+      try{
+        var p="/storage/emulated/0/Download/TornadoAI/www/feed_embed.html";
+        fetch("feed_embed.html").then(function(r){
+          if(!r.ok) throw new Error("status "+r.status);
+          return r.text();
+        }).then(function(html){
+          document.getElementById("feed_container").innerHTML = html;
+        }).catch(function(e){
+          document.getElementById("feed_container").innerHTML =
+            "<div style=\"padding:12px;opacity:.8\">Open: <a href=\""+p+"\">feed_embed.html</a></div>";
+        });
+      }catch(e){}
+    })();
+  </script>

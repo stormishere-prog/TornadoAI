@@ -1,0 +1,11 @@
+# Core civic/legal/government feeds
+https://www.whitehouse.gov/briefing-room/presidential-actions/feed/
+https://www.justice.gov/news/rss.xml
+https://www.courtlistener.com/opinion/feed/
+https://www.congress.gov/rss/general.xml
+
+# Broad outlets (keep light)
+http://feeds.bbci.co.uk/news/rss.xml
+https://apnews.com/hub/ap-top-news.rss
+http://feeds.foxnews.com/foxnews/national
+https://thehill.com/news/feed/

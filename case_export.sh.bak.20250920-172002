@@ -1,0 +1,64 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -eu
+
+ROOT="/storage/emulated/0/Download/TornadoAI"
+DB="$ROOT/corpus.db"
+CASES_DIR="$ROOT/reports/cases"
+
+CASE_RAW="${1:-}"
+[ -z "$CASE_RAW" ] && { echo "usage: $0 <CaseName>"; exit 2; }
+
+# sanitize folder name
+case_folder=$(printf "%s" "$CASE_RAW" \
+  | tr '[:upper:]' '[:lower:]' \
+  | sed -e 's/[^a-z0-9._-]/-/g' -e 's/-\+/-/g' -e 's/^-//' -e 's/-$//')
+outdir="$CASES_DIR/$case_folder"
+mkdir -p "$outdir"
+
+# escape single quotes for SQL
+case_sql=$(printf "%s" "$CASE_RAW" | sed "s/'/''/g")
+
+# README.md
+{
+  echo "# Case: $CASE_RAW"
+  echo
+  echo "Generated: $(date -Is)"
+  echo
+  echo "## Evidence"
+  sqlite3 -cmd ".timeout 4000" -cmd ".mode list" "$DB" <<SQL
+WITH rows AS (
+  SELECT
+    COALESCE(title,'') AS title,
+    url,
+    page_no,
+    REPLACE(SUBSTR(quote,1,300), char(10), ' ') AS q,
+    datetime(ts_utc,'unixepoch') AS ts
+  FROM v_case_bundle
+  WHERE case_name='$case_sql'
+  ORDER BY ts_utc
+)
+SELECT '* ' || title || ' — p.' || page_no || ' — ' || url || char(10) ||
+       '  > ' || q || char(10) ||
+       '  _(' || ts || ')_'
+FROM rows;
+SQL
+} > "$outdir/README.md"
+
+# evidence.csv
+sqlite3 -cmd ".timeout 4000" -cmd ".mode csv" "$DB" <<SQL > "$outdir/evidence.csv"
+SELECT id,url,page_no,IFNULL(title,''),quote,IFNULL(note,''),
+       datetime(ts_utc,'unixepoch')
+FROM v_case_bundle
+WHERE case_name='$case_sql'
+ORDER BY ts_utc;
+SQL
+
+# links.txt
+sqlite3 -cmd ".timeout 4000" -cmd ".mode list" "$DB" <<SQL > "$outdir/links.txt"
+SELECT DISTINCT url
+FROM v_case_bundle
+WHERE case_name='$case_sql'
+ORDER BY url;
+SQL
+
+echo "ok: folder ready -> $outdir"

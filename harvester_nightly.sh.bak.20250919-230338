@@ -1,0 +1,80 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -eu
+
+ROOT="/storage/emulated/0/Download/TornadoAI"
+cd "$ROOT" || exit 1
+
+LOG="$ROOT/harvester.log"
+PIDFILE="$ROOT/harvester.pid"
+DAILY_STAMP="$ROOT/.daily_foia_ran"
+WEEKLY_STAMP="$ROOT/.weekly_media_ran"
+
+# Config (you can override via env when launching)
+WINDOW_START_HOUR="${WINDOW_START_HOUR:-2}"   # 2 AM
+WINDOW_END_HOUR="${WINDOW_END_HOUR:-3}"       # 3 AM
+VIDEO_WEEKDAY="${VIDEO_WEEKDAY:-Sun}"         # weekly media pass day
+
+touch "$LOG"
+
+# single-instance guard
+if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+  echo "[harvester] already running (pid=$(cat "$PIDFILE"))" >> "$LOG"
+  exit 0
+fi
+echo $$ > "$PIDFILE"
+
+in_window() {
+  HOUR=$(date +%H | sed 's/^0*//'); [ -z "$HOUR" ] && HOUR=0
+  [ "$HOUR" -ge "$WINDOW_START_HOUR" ] && [ "$HOUR" -le "$WINDOW_END_HOUR" ]
+}
+
+is_today() {
+  FILE="$1"
+  [ ! -f "$FILE" ] && return 1
+  STAMP=$(cat "$FILE" 2>/dev/null || echo 0)
+  STAMP_DAY=$(date -d "@$STAMP" +%Y-%m-%d 2>/dev/null || busybox date -D "%s" -d "$STAMP" +%Y-%m-%d)
+  [ "$STAMP_DAY" = "$(date +%Y-%m-%d)" ]
+}
+
+is_this_week() {
+  FILE="$1"
+  [ ! -f "$FILE" ] && return 1
+  STAMP=$(cat "$FILE" 2>/dev/null || echo 0)
+  STAMP_WEEK=$(date -d "@$STAMP" +%G-%V 2>/dev/null || busybox date -D "%s" -d "$STAMP" +%G-%V)
+  [ "$STAMP_WEEK" = "$(date +%G-%V)" ]
+}
+
+while :; do
+  # keep schema healthy on each wake
+  sh ./safe_run.sh python3 migrate.py >>"$LOG" 2>&1 || true
+
+  if in_window; then
+    NOW_DAY=$(date +%a)
+
+    # daily PDF crawl + ingest (once per calendar day)
+    if ! is_today "$DAILY_STAMP"; then
+      echo "[harvester][$(date -Is)] NIGHTLY: daily PDF crawl+ingest" >>"$LOG"
+      sh ./safe_run.sh python3 foia_deep.py --limit-items 120 --limit-pdfs 400 --list-pages 10 >>"$LOG" 2>&1 || true
+      sh ./safe_run.sh python3 fetch_and_ingest.py
+sh ./safe_run.sh python3 alerts.py >>"$LOG" 2>&1 || true
+python3 propaganda_scan.py --since-days 14 --limit 4000 >>"$LOG" 2>&1 || true
+      date +%s > "$DAILY_STAMP"
+    fi
+
+    # weekly media/video pass (default Sunday)
+    if [ "$NOW_DAY" = "$VIDEO_WEEKDAY" ] && ! is_this_week "$WEEKLY_STAMP"; then
+      echo "[harvester][$(date -Is)] NIGHTLY: weekly media pass" >>"$LOG"
+      sh ./safe_run.sh python3 foia_deep.py --limit-items 200 --limit-pdfs 600 --list-pages 15 >>"$LOG" 2>&1 || true
+      sh ./safe_run.sh python3 fetch_and_ingest.py
+sh ./safe_run.sh python3 alerts.py >>"$LOG" 2>&1 || true
+python3 propaganda_scan.py --since-days 14 --limit 4000 >>"$LOG" 2>&1 || true
+      date +%s > "$WEEKLY_STAMP"
+    fi
+
+    # avoid re-running within the same window
+    sleep 3600
+  else
+    # not in window yet — check again in 5 minutes
+    sleep 300
+  fi
+done

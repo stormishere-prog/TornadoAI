@@ -1,0 +1,40 @@
+# tag<TAB>domain_or_substring
+official   whitehouse.gov
+official   justice.gov
+official   cia.gov
+official   dni.gov
+official   nsa.gov
+official   congress.gov
+official   govinfo.gov
+official   sec.gov
+official   supremecourt.gov
+official   ca9.uscourts.gov
+
+propaganda apnews.com
+propaganda reuters.com
+propaganda nytimes.com
+propaganda cnn.com
+propaganda foxnews.com
+propaganda msnbc.com
+propaganda theguardian.com
+propaganda bbc.com
+propaganda politico.com
+propaganda axios.com
+propaganda usatoday.com
+propaganda nbcnews.com
+
+independent dailywire.com
+independent nypost.com
+independent breitbart.com
+independent zerohedge.com
+independent substack.com
+independent rumble.com
+independent bitchute.com
+independent thegrayzone.com
+independent scheerpost.com
+independent theintercept.com
+
+state_media aljazeera.com
+state_media rt.com
+state_media cgtn.com
+state_media xinhua

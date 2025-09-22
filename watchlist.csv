@@ -1,0 +1,16 @@
+tag,query,urlfilter,case_name,priority
+CharlieKirk,Charlie Kirk,%,CharlieKirk,0
+Epstein,Jeffrey Epstein,%,Epstein,0
+Propaganda/HighScore,propaganda_score:>=0.60,%,Propaganda — High Score,4
+CharlieKirk/all,Charlie Kirk,%,Charlie Kirk / All Sources,3
+FF/Shooting,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (shoot* OR firearm* OR gunman OR active shooter OR massacre),%,False Flag / Shooting,3
+FF/Bombing,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (bomb* OR explosion OR IED OR blast),%,False Flag / Bombing,3
+FF/Stabbing,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (stab* OR knife OR machete),%,False Flag / Stabbing,3
+FF/Aviation,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (plane OR flight OR airliner OR aircraft OR crash OR downed),%,False Flag / Aviation,3
+FF/Rail,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (derail* OR train OR rail),%,False Flag / Rail,3
+FF/ChemBio,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (chemical OR hazmat OR toxic OR biolab OR pathogen),%,False Flag / Chem-Bio,3
+FF/Infra,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (pipeline OR refinery OR substation OR grid OR blackout OR power outage OR transformer),%,False Flag / Infrastructure,3
+FF/Cyber,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (cyber* OR ransomware OR DDoS OR outage OR internet OR cellular OR blackout),%,False Flag / Cyber-Outage,3
+FF/Assassination,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (assassin* OR attempt* OR plot OR gunman OR sniper),%,False Flag / Assassination,3
+FF/Unrest,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (riot* OR unrest OR protest* OR demonstration* OR crowd OR clash* OR agitator),%,False Flag / Unrest,3
+FF/Generic,(false flag OR staged OR psyop OR provocation OR agent provocateur OR manufactured OR engineered) AND (attack OR incident OR operation OR event OR terror OR emergency),%,False Flag / Generic,2

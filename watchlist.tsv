@@ -1,0 +1,6 @@
+tag	query	urlfilter	case	priority
+DOJ/CharlieKirk	Charlie Kirk DOJ	https://www.justice.gov/%	Charlie Kirk / DOJ	3
+TEST/DOJ	Section 702 OR FISC OR minimization	https://www.justice.gov/%	Test / DOJ 702	2
+Epstein/Network	Epstein OR Maxwell OR 'Virgin Islands' OR 'VICP' OR 'flight log' OR SDNY OR 'Southern District of New York' OR 'Victim Compensation' OR 'Little St. James' OR 'J. Epstein' OR 'Ghislaine'	%	Epstein Network	4
+Epstein/Legal	Epstein NEAR/5 (indictment OR complaint OR stipulation OR subpoena OR deposition OR exhibit OR docket OR settlement)	%	Epstein Network – Legal	3
+CharlieKirk/All	"Charlie Kirk OR Turning Point USA OR ""American Comeback Tour"" OR Erika Kirk OR Tyler Robinson OR ""Utah Valley University"" OR TPUSA"	%	Charlie Kirk / All Sources	4

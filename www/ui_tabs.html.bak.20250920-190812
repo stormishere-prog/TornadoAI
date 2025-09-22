@@ -1,0 +1,64 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TornadoAI</title>
+<style>
+  :root { --bg:#0b0f14; --fg:#e8eef6; --muted:#9db0c8; --card:#111722; --border:#1a2636; --accent:#5fb3ff; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  .tabs.top{
+    position:sticky;top:0;z-index:10;display:flex;gap:10px;align-items:center;
+    padding:10px;border-bottom:1px solid var(--border);background:#0b0f14f2;backdrop-filter:blur(6px)
+  }
+  .tabbtn{color:var(--fg);text-decoration:none;padding:8px 14px;border-radius:8px}
+  .tabbtn.active{background:var(--border)}
+  .tabbtn:hover{background:var(--accent);color:#fff}
+  main{padding:12px;max-width:1100px;margin:0 auto}
+  /* Chat pane placeholder card */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+  /* Feed pane shows the feed preview inside an iframe */
+  .feedwrap{height:calc(100vh - 66px); /* viewport minus tabs */ }
+  .feedwrap iframe{width:100%;height:100%;border:0;border-radius:12px;overflow:hidden;background:#0b0f14}
+  /* hide the other pane */
+  .pane{display:none}
+  .pane.active{display:block}
+</style>
+
+<nav class="tabs top">
+  <a id="tab-chat" class="tabbtn active" href="#chat" onclick="showPane('chat')">Chat</a>
+  <a id="tab-feed" class="tabbtn"        href="#feed" onclick="showPane('feed')">Feed</a>
+</nav>
+
+<main>
+  <!-- Chat pane (your normal chat view goes here; this is a placeholder) -->
+  <section id="pane-chat" class="pane active">
+    <div class="card">
+      <h2 style="margin:0 0 8px">Chat</h2>
+      <p>This is your chat area. (Keep using the app as normal.)</p>
+    </div>
+  </section>
+
+  <!-- Feed pane embeds the horizontal feed you generated -->
+  <section id="pane-feed" class="pane">
+    <div class="feedwrap">
+      <iframe src="feed_preview.html"></iframe>
+    </div>
+  </section>
+</main>
+
+<script>
+  function showPane(name){
+    document.getElementById('pane-chat').classList.toggle('active', name==='chat');
+    document.getElementById('pane-feed').classList.toggle('active', name==='feed');
+    document.getElementById('tab-chat').classList.toggle('active', name==='chat');
+    document.getElementById('tab-feed').classList.toggle('active', name==='feed');
+    try{ localStorage.setItem('ta_active_tab', name); }catch(_){}
+  }
+  // Restore last tab
+  (function(){
+    try{
+      var last = localStorage.getItem('ta_active_tab');
+      if(last && (last==='feed' || last==='chat')) showPane(last);
+    }catch(_){}
+  })();
+</script>

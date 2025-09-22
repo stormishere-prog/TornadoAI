@@ -1,0 +1,299 @@
+#!/usr/bin/env python3
+# Minimal TornadoAI dev router (reset clean). Port hard-set to 18084.
+import json, os, re, sqlite3, sys, time
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
+
+HOST, PORT = "127.0.0.1", 18700
+ROOT = os.path.abspath(os.getcwd())
+DB_PATH = os.path.join(ROOT, "corpus.db")
+BACKUP_DIR = os.path.join(ROOT, "backups"); os.makedirs(BACKUP_DIR, exist_ok=True)
+
+def db_connect_rw():
+    first = not os.path.exists(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=10, isolation_level=None)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA synchronous=FULL;")
+    conn.execute("PRAGMA temp_store=FILE;")
+    conn.execute("PRAGMA foreign_keys=ON;")
+    if first: _init_schema(conn)
+    return conn
+
+def _init_schema(c):
+    c.executescript("""
+    CREATE TABLE IF NOT EXISTS docs(
+      url TEXT PRIMARY KEY, title TEXT, content TEXT, ts_utc INTEGER,
+      source_trust INTEGER DEFAULT 0, sha256 TEXT UNIQUE
+    );
+    CREATE TABLE IF NOT EXISTS evidence_log(
+      ts_utc INTEGER, source TEXT, snippet TEXT, tags TEXT, sha256 TEXT, score_breakdown TEXT
+    );
+    CREATE TABLE IF NOT EXISTS staging_docs(
+      url TEXT, title TEXT, content TEXT, ts_utc INTEGER, source_trust INTEGER,
+      sha256 TEXT, valid INT DEFAULT 0, notes TEXT
+    );
+    """); c.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+
+def db_quick_check(c):
+    try: return c.execute("PRAGMA quick_check;").fetchone()[0]
+    except Exception as e: return f"error:{e}"
+
+def scrub(t): return re.sub(r"\s{2,}"," ", re.sub(r"[!]{2,}","!", t or "")).strip()
+def tags_for(t):
+    PAT=[("anonymous sources","appeal_to_authority"),("experts say","appeal_to_authority"),
+         ("breaking","sensational"),("shocking","sensational"),("must see","clickbait"),
+         ("debunked","framing"),("fact check","framing")]
+    low=(t or "").lower(); hits={tag for k,tag in PAT if k in low}; return list(hits or {"clean"})
+
+def duckduckgo_snippet(q, timeout=8):
+    try:
+        url="https://html.duckduckgo.com/html/?q="+q.replace(" ","+")
+        req=Request(url, headers={"User-Agent":"Mozilla/5.0"})
+        with urlopen(req, timeout=timeout) as r: raw=r.read().decode("utf-8","ignore")
+        return scrub(re.sub(r"<[^>]+>"," ", raw))[:1200]
+    except Exception: return ""
+
+def fetch_text(url, timeout=3):
+    try:
+        req=Request(url, headers={"User-Agent":"Mozilla/5.0"})
+        with urlopen(req, timeout=timeout) as r: html=r.read().decode("utf-8","ignore")
+        html=re.sub(r"<script[\\s\\S]*?</script>"," ", html, flags=re.I)
+        html=re.sub(r"<style[\\s\\S]*?</style>"," ", html, flags=re.I)
+        tit=re.search(r"<title[^>]*>([\\s\\S]*?)</title>", html, re.I)
+        meta=re.search(r"<meta[^>]+name=\\\"description\\\"[^>]+content=\\\"([^\\\"]+)\\\"", html, re.I)
+        para=re.search(r"<p[^>]*>([\\s\\S]*?)</p>", html, re.I)
+        def strip(x): return scrub(re.sub(r"<[^>]+>"," ", x or ""))
+        title=strip(tit.group(1) if tit else ""); desc=strip(meta.group(1) if meta else ""); p=strip(para.group(1) if para else "")
+        text=(title+" — "+(desc or p)) if title else (desc or p)
+        return text[:1200]
+    except Exception: return ""
+
+def guess_score(local_hits, web_ok, has_primary, complete):
+    score=0; br=[]
+    sc=min(local_hits,2)*10; score+=sc; br.append(f"source_count(+{sc})")
+    if has_primary: score+=30; br.append("primary(+30)")
+    if web_ok: score+=10; br.append("web(+10)")
+    score += (10 if complete else -10); br.append("complete(+10)" if complete else "incomplete(-10)")
+    score=max(1,min(score,99)); return score, ", ".join(br)
+
+def sanitize(s): return re.sub(r"\\s+"," ", (s or "").strip())[:2000]
+
+def compose_answer(q, local_rows, web_text, conf):
+    parts=[]
+    parts.append( ("FACT (%d%%): Based on your corpus and sources, here’s what I’ve got."%conf)
+                  if conf>=90 else ("GUESS — %d%% confidence (limited corroboration)."%conf) )
+    if local_rows:
+        for (u,t,snip) in local_rows: parts.append(f"• {t or '(untitled)'} — {u}\\n  {snip}")
+    else: parts.append("• No strong local hits.")
+    if web_text: parts.append("• Web signal:\\n  "+web_text[:400])
+    parts.append("If you want me to harden this, fetch more sources or specify a date/name.")
+    return "\\n".join(parts)[:4000]
+
+def read_mem_pct():
+    try:
+        info = {}
+        with open("/proc/meminfo","r") as f:
+            for ln in f:
+                k = ln.split(":")[0].strip()
+                v = ln.split()[1] if len(ln.split())>1 else "0"
+                if v.isdigit(): info[k] = int(v)  # kB
+        total = info.get("MemTotal", 0)
+        avail = info.get("MemAvailable")
+        if avail is None:
+            # Fallback: MemFree + Buffers + Cached + SReclaimable - Shmem
+            avail = (info.get("MemFree",0) + info.get("Buffers",0) +
+                     info.get("Cached",0) + info.get("SReclaimable",0) -
+                     info.get("Shmem",0))
+            if avail < 0: avail = 0
+        if total <= 0: return 0.0
+        used_pct = 100.0 * (total - avail) / total
+        if used_pct < 0: used_pct = 0.0
+        if used_pct > 100: used_pct = 100.0
+        return round(used_pct, 2)
+    except Exception:
+        return 0.0
+def read_cpu_pct():
+    try:
+        import time
+        def snap():
+            with open("/proc/stat","r") as f: p=f.readline().split()
+            u,n,s,i = map(int, p[1:5]); return u,n,s,i
+        a=snap(); time.sleep(0.12); b=snap()
+        idle=b[3]-a[3]; total=(sum(b)-sum(a)); 
+        return 0.0 if total<=0 else round(100.0*(total-idle)/total,2)
+    except: return 0.0
+
+def handle_api(path, body):
+    if path=="/api/debug/mem":
+        try:
+            d={}
+            import json
+            with open("/proc/meminfo","r") as f:
+                for ln in f:
+                    parts=ln.split()
+                    if len(parts)>=2 and parts[1].isdigit(): d[parts[0].rstrip(":")] = int(parts[1])
+            return 200, {"raw": d, "mem_pct": read_mem_pct()}
+        except Exception as e:
+            return 200, {"error": str(e)}
+    if path=="/api/sys/cpu_mem": return 200, {"cpu": read_cpu_pct(), "mem": read_mem_pct()}
+    if path=="/api/health":
+        with db_connect_rw() as c: return 200, {"quick_check": db_quick_check(c), "backups": sorted(os.listdir(BACKUP_DIR))}
+    if path=="/api/ask":
+        try:
+            data=json.loads(body or b"{}"); q=sanitize(data.get("question","")); use_web=bool(data.get("web",True))
+        except Exception: return 400, {"error":"bad json"}
+        if not q: return 400, {"error":"empty question"}
+        with db_connect_rw() as c:
+            cur=c.execute("SELECT url, IFNULL(title,''), substr(content,1,400) FROM docs "
+                          "WHERE content LIKE ? OR title LIKE ? ORDER BY length(content) LIMIT 3",
+                          (f"%{q}%", f"%{q}%")); local=cur.fetchall()
+            web_text = duckduckgo_snippet(q) if use_web else ""
+            if web_text:
+                c.execute("INSERT INTO evidence_log(ts_utc,source,snippet,tags,sha256,score_breakdown) VALUES(?,?,?,?,?,?)",
+                          (int(time.time()), f"websearch:{q}", web_text[:500], ",".join(tags_for(web_text)),"",""))
+            local_hits=len(local)
+            has_primary=any(u and (u.startswith("https://www.whitehouse.gov") or u.startswith("https://www.govinfo.gov") or u.startswith("https://www.supremecourt.gov")) for (u,_,_) in local)
+            complete=any(u and t for (u,t,_) in local)
+            conf, br = guess_score(local_hits, bool(web_text), has_primary, complete)
+            reply = compose_answer(q, local, web_text, conf)
+            try:
+                if web_text: c.execute("UPDATE evidence_log SET score_breakdown=? WHERE rowid=(SELECT max(rowid) FROM evidence_log)", (br,))
+            except: pass
+            return 200, {"answer":reply, "confidence":conf, "label":("FACT" if conf>=90 else "GUESS"),
+                         "factors":br, "citations":[{"url":u,"title":t} for (u,t,_) in local]}
+    if path=="/api/ingest/pdf":
+        try:
+            data=json.loads(body or b"{}"); url=str(data.get("url","")).strip(); title=str(data.get("title","")).strip() or "PDF (staged)"
+            if not url: return 400, {"error":"missing url"}
+        except Exception: return 400, {"error":"bad json"}
+        with db_connect_rw() as c:
+            c.execute("BEGIN IMMEDIATE;")
+            try:
+                c.execute("INSERT INTO staging_docs(url,title,content,ts_utc,source_trust,sha256,valid,notes) "
+                          "VALUES(?,?,?,?,?,?,?,?)", (url,title,"[pending extract]",int(time.time()),10,"",0,"dev_stub"))
+                c.execute("COMMIT;")
+            except Exception as e:
+                c.execute("ROLLBACK;"); return 500, {"error": f"stage_failed:{e}"}
+        return 200, {"ok":True, "staged":url}
+    if path=="/api/fetch/news":
+        p=os.path.join(ROOT,"news_sources.txt")
+        if not os.path.exists(p): return 400, {"error":"news_sources.txt not found in project root"}
+        with open(p,"r",encoding="utf-8",errors="ignore") as f:
+            urls=[ln.strip() for ln in f if ln.strip() and not ln.strip().startswith("#")]
+        added=0
+        with db_connect_rw() as c:
+            c.execute("BEGIN IMMEDIATE;")
+            try:
+                for u in urls[:20]:
+                    snippet=fetch_text(u)
+                    tgs=",".join(tags_for(snippet))
+                    c.execute("INSERT INTO evidence_log(ts_utc,source,snippet,tags,sha256,score_breakdown) VALUES(?,?,?,?,?,?)",
+                              (int(time.time()),u,snippet[:800],tgs,"","news_dev")); added+=1
+                c.execute("COMMIT;")
+            except Exception as e:
+                c.execute("ROLLBACK;"); return 500, {"error": f"news_failed:{e}"}
+        return 200, {"ok":True,"added":added}
+    if path=="/api/fetch/eo":
+        with db_connect_rw() as c:
+            c.execute("INSERT INTO evidence_log(ts_utc,source,snippet,tags,sha256,score_breakdown) "
+                      "VALUES(?,?,?,?,?,?)", (int(time.time()),"whitehouse.gov/dev","EO index fetch (dev stub)","clean","","eo_dev"))
+        return 200, {"ok":True,"note":"dev_stub"}
+    if path=="/api/fetch/truth":
+        with db_connect_rw() as c:
+            c.execute("INSERT INTO evidence_log(ts_utc,source,snippet,tags,sha256,score_breakdown) "
+                      "VALUES(?,?,?,?,?,?)", (int(time.time()),"truthsocial/dev","Truth pull (dev stub)","clean","","truth_dev"))
+        return 200, {"ok":True,"note":"dev_stub"}
+    if path=="/api/fetch/news2":
+        print("[news2] request received")
+        return fetch_news_ingest()
+        print("[news2] request received")
+        return fetch_news_ingest()
+        print("[news2] request received")
+        return fetch_news_ingest()
+    if path=="/api/ping":
+        return 200, {"ok": True, "ts": int(time.time())}
+    if path=="/api/ping":
+        return 200, {"ok": True, "ts": int(time.time())}
+    if path=="/api/port":
+        return 200, {"port": PORT}
+    return 404, {"error":"not found"}
+
+
+
+class Handler(SimpleHTTPRequestHandler):
+    def log_message(self, fmt, *args):
+        try:
+            sys.stdout.write("[req] " + (fmt % args) + "
+")
+        except Exception as e:
+            try:
+                sys.stdout.write("[req] log_message failed: " + str(e) + "
+")
+            except Exception:
+                pass
+
+    def _cors(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods","GET,POST,OPTIONS")
+        self.send_header("Access-Control-Allow-Headers","Content-Type")
+
+    def _send_json(self, code, obj):
+        data = json.dumps(obj).encode("utf-8")
+        self.send_response(code)
+        self._cors()
+        self.send_header("Content-Type","application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self._cors()
+        self.end_headers()
+
+    def do_GET(self):
+        try:
+            parsed = urlparse(self.path)
+            if parsed.path.startswith("/api/"):
+                code, obj = safe_api(parsed.path, None)
+                return self._send_json(code, obj)
+            return super().do_GET()
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            print("[do_GET] EXCEPTION", e, "
+", tb)
+            try:
+                self._send_json(500, {"error":"internal","detail":str(e)})
+            except Exception:
+                pass
+
+    def do_POST(self):
+        try:
+            parsed = urlparse(self.path)
+            ln = int(self.headers.get("Content-Length") or "0")
+            body = self.rfile.read(ln) if ln > 0 else b""
+            if parsed.path.startswith("/api/"):
+                code, obj = safe_api(parsed.path, body)
+                return self._send_json(code, obj)
+            self._send_json(404, {"error":"not found"})
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            print("[do_POST] EXCEPTION", e, "
+", tb)
+            try:
+                self._send_json(500, {"error":"internal","detail":str(e)})
+            except Exception:
+                pass
+
+
+def safe_api(path, body):
+    try:
+        return handle_api(path, body)
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        print("[api] EXCEPTION on", path, "->", e, "\n", tb)
+        return 500, {"error":"internal","detail":str(e)}

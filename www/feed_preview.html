@@ -1,0 +1,512 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TornadoAI — Feed (Rows by Source)</title>
+<style>
+  :root { --bg:#0b0f14; --fg:#e8eef6; --muted:#9db0c8; --card:#111722; --border:#1a2636; --accent:#5fb3ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--fg); }
+  header { position:sticky; top:0; padding:14px 16px; border-bottom:1px solid var(--border); background:#0b0f14f2; backdrop-filter: blur(6px); }
+  h1 { margin:0; font-size:18px; }
+  main { padding:12px 10px 20px; max-width: 1100px; margin: 0 auto; }
+  .feedrow { margin: 14px 0 18px; }
+  .rowhead { display:flex; gap:8px; align-items:baseline; padding:2px 6px; color:var(--muted); }
+  .rowhead .host { font-weight:600; color:var(--fg); }
+  .rowhead .count { font-size:12px; }
+  /* robust horizontal scroller */
+  .strip.nowrap { white-space: nowrap; overflow-x: auto; padding: 8px 6px 2px; }
+  .strip.nowrap::-webkit-scrollbar { height:8px; }
+  .strip.nowrap::-webkit-scrollbar-thumb { background:#213246; border-radius:6px; }
+  .card {
+    display:inline-block; vertical-align:top; width:320px; white-space:normal;
+    background:var(--card); border:1px solid var(--border); border-radius:14px;
+    padding:12px; margin:0 10px 0 0; min-height:140px;
+  }
+  .ttl { margin:4px 0 6px; font-size:16px; }
+  .ttl a { color:var(--fg); text-decoration:none; }
+  .ttl a:hover { color:var(--accent); text-decoration:underline; }
+  .snip { color:var(--muted); margin:0 0 8px 0; }
+  .meta { color:#8aa0ba; font-size:12px; }
+  .src { color:#88a; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; }
+  footer { color:var(--muted); text-align:center; padding:18px; font-size:13px; }
+</style>
+<header><h1>Feed — grouped by source</h1></header>
+<main>
+  
+<section class="feedrow">
+  <div class="rowhead"><span class="host">(unknown)</span> <span class="count">(2 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta"></div>
+  <h3 class="ttl"><a href="">https://www.justice.gov/oip/foia-library/foia-processed/general_topics/buzz_feed_news_articles_04_30_21_part_1/download</a></h3>
+  <p class="snip">(no summary yet)</p>
+  <div class="src"></div>
+</article><article class="card">
+  <div class="meta"></div>
+  <h3 class="ttl"><a href="">https://www.justice.gov/oip/foia-library/foia-processed/general_topics/buzz_feed_news_articles_04_30_21_part_1/download</a></h3>
+  <p class="snip">(no summary yet)</p>
+  <div class="src"></div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">nypost.com</span> <span class="count">(53 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:22</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/us-news/chuck-schumer-and-hakeem-jeffries-demand-meeting-with-trump-as-government-shutdown-deadline-nears/">Chuck Schumer and Hakeem Jeffries ‘demand’ meeting with Trump as government shutdown deadline nears</a></h3>
+  <p class="snip">Chuck Schumer and Hakeem Jeffries ‘demand’ meeting with Trump as government shutdown deadline nears Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basket</p>
+  <div class="src">https://nypost.com/2025/09/20/us-news/chuck-schumer-and-hakeem-jeffries-demand-meeting-with-trump-as-government-shutdown-deadline-nears/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:21</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/sports/the-top-priorities-mike-brown-faces-as-he-enters-knicks-camp/">The top priorities Mike Brown faces as he enters Knicks camp</a></h3>
+  <p class="snip">The top priorities Mike Brown faces as he enters Knicks camp Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports Betting B</p>
+  <div class="src">https://nypost.com/2025/09/20/sports/the-top-priorities-mike-brown-faces-as-he-enters-knicks-camp/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:21</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/sports/giants-owe-a-competitive-home-opener-to-their-fans-in-the-worst-way/">Giants owe a competitive home opener to their fans in the worst way</a></h3>
+  <p class="snip">Giants owe a competitive home opener to their fans in the worst way Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports Be</p>
+  <div class="src">https://nypost.com/2025/09/20/sports/giants-owe-a-competitive-home-opener-to-their-fans-in-the-worst-way/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:20</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/sports/robert-redford-hit-a-forever-home-run-with-iconic-natural-role/">Robert Redford hit a forever home run with iconic &#x27;Natural&#x27; role</a></h3>
+  <p class="snip">Robert Redford hit a forever home run with iconic &#x27;Natural&#x27; role Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports Betti</p>
+  <div class="src">https://nypost.com/2025/09/20/sports/robert-redford-hit-a-forever-home-run-with-iconic-natural-role/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:20</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/betting/giants-vs-dodgers-prediction-mlb-odds-player-props-picks-saturday/">Giants vs. Dodgers prediction: MLB odds, player props, picks Saturday</a></h3>
+  <p class="snip">Giants vs. Dodgers prediction: MLB odds, player props, picks Saturday Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports </p>
+  <div class="src">https://nypost.com/2025/09/20/betting/giants-vs-dodgers-prediction-mlb-odds-player-props-picks-saturday/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:19</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/sports/comedy-of-errors-haunt-mets-in-ugly-inning-against-nationals/">Comedy of errors haunt Mets in ugly inning against Nationals</a></h3>
+  <p class="snip">Comedy of errors haunt Mets in ugly inning against Nationals Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports Betting B</p>
+  <div class="src">https://nypost.com/2025/09/20/sports/comedy-of-errors-haunt-mets-in-ugly-inning-against-nationals/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:19</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/world-news/zelensky-says-he-will-meet-with-trump-in-nyc-next-week/">Zelensky says he will meet with Trump in NYC next week</a></h3>
+  <p class="snip">Zelensky says he will meet with Trump in NYC next week Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports Betting Busines</p>
+  <div class="src">https://nypost.com/2025/09/20/world-news/zelensky-says-he-will-meet-with-trump-in-nyc-next-week/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:18</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/sports/scouts-reveal-arch-mannings-nfl-outlook-amid-slow-texas-start/">Scouts reveal Arch Manning&#x27;s NFL outlook amid slow Texas start</a></h3>
+  <p class="snip">Scouts reveal Arch Manning&#x27;s NFL outlook amid slow Texas start Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports Betting</p>
+  <div class="src">https://nypost.com/2025/09/20/sports/scouts-reveal-arch-mannings-nfl-outlook-amid-slow-texas-start/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:17</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/us-news/massive-high-speed-police-chase-ends-in-deadly-shootout-with-homicide-suspect-outside-california-in-n-out/">High-speed police chase ends in deadly shootout with homicide suspect outside California In-N-Out</a></h3>
+  <p class="snip">High-speed police chase ends in deadly shootout with homicide suspect outside California In-N-Out Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketba</p>
+  <div class="src">https://nypost.com/2025/09/20/us-news/massive-high-speed-police-chase-ends-in-deadly-shootout-with-homicide-suspect-outside-california-in-n-out/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:09</div>
+  <h3 class="ttl"><a href="https://nypost.com/2025/09/20/sports/how-saquon-barkley-views-daniel-jones-rebirth-after-leaving-giants/">How Saquon Barkley views Daniel Jones&#x27; rebirth after leaving Giants</a></h3>
+  <p class="snip">How Saquon Barkley views Daniel Jones&#x27; rebirth after leaving Giants Primary Menu Sections US News Metro Long Island Politics World News Page Six Sports NFL MLB Olympics NBA NHL College Football College Basketball WNBA Post Sports+ Sports Be</p>
+  <div class="src">https://nypost.com/2025/09/20/sports/how-saquon-barkley-views-daniel-jones-rebirth-after-leaving-giants/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">dailywire.com</span> <span class="count">(52 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:22</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/ilhan-omar-doubles-down-on-nasty-charlie-kirk-comments-says-legacy-belongs-in-dustbin-of-history">https://www.dailywire.com/news/ilhan-omar-doubles-down-on-nasty-charlie-kirk-comments-says-legacy-belongs-in-dustbin-of-history</a></h3>
+  <p class="snip">Ilhan Omar Doubles Down On Nasty Charlie Kirk Comments, Says Legacy Belongs In ‘Dustbin Of History’ Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; M</p>
+  <div class="src">https://www.dailywire.com/news/ilhan-omar-doubles-down-on-nasty-charlie-kirk-comments-says-legacy-belongs-in-dustbin-of-history</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:22</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/joe-manchin-stunned-by-aocs-charlie-kirk-rant-dems-are-getting-worse-not-better">https://www.dailywire.com/news/joe-manchin-stunned-by-aocs-charlie-kirk-rant-dems-are-getting-worse-not-better</a></h3>
+  <p class="snip">Joe Manchin ‘Stunned’ By AOC’s Charlie Kirk Rant: Dems ‘Are Getting Worse, Not Better’ Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies All Acc</p>
+  <div class="src">https://www.dailywire.com/news/joe-manchin-stunned-by-aocs-charlie-kirk-rant-dems-are-getting-worse-not-better</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:35</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/south-park-postpones-new-episode-hours-before-airtime">https://www.dailywire.com/news/south-park-postpones-new-episode-hours-before-airtime</a></h3>
+  <p class="snip">‘South Park’ Postpones New Episode Hours Before Airtime Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies All Access Shop Kids Gift Membership S</p>
+  <div class="src">https://www.dailywire.com/news/south-park-postpones-new-episode-hours-before-airtime</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:35</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/hollywood-melts-down-over-jimmy-kimmels-indefinite-suspension">https://www.dailywire.com/news/hollywood-melts-down-over-jimmy-kimmels-indefinite-suspension</a></h3>
+  <p class="snip">Hollywood Melts Down Over Jimmy Kimmel’s Indefinite Suspension Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies All Access Shop Kids Gift Membe</p>
+  <div class="src">https://www.dailywire.com/news/hollywood-melts-down-over-jimmy-kimmels-indefinite-suspension</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:34</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/trump-trying-to-reclaim-bagram-air-base-a-symbol-of-bidens-failed-afghanistan-withdrawal">https://www.dailywire.com/news/trump-trying-to-reclaim-bagram-air-base-a-symbol-of-bidens-failed-afghanistan-withdrawal</a></h3>
+  <p class="snip">Trump ‘Trying’ To Reclaim Bagram Air Base, A Symbol Of Biden’s Failed Afghanistan Withdrawal Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies A</p>
+  <div class="src">https://www.dailywire.com/news/trump-trying-to-reclaim-bagram-air-base-a-symbol-of-bidens-failed-afghanistan-withdrawal</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:34</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/congress-urged-to-end-one-of-d-c-s-swampiest-practices">https://www.dailywire.com/news/congress-urged-to-end-one-of-d-c-s-swampiest-practices</a></h3>
+  <p class="snip">Congress Urged To End One Of D.C.’s ‘Swampiest’ Practices Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies All Access Shop Kids Gift Membership</p>
+  <div class="src">https://www.dailywire.com/news/congress-urged-to-end-one-of-d-c-s-swampiest-practices</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:33</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/erika-kirk-elected-to-lead-turning-point-usa-as-ceo-and-board-chair">https://www.dailywire.com/news/erika-kirk-elected-to-lead-turning-point-usa-as-ceo-and-board-chair</a></h3>
+  <p class="snip">Erika Kirk Elected To Lead Turning Point USA As CEO And Board Chair Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies All Access Shop Kids Gift </p>
+  <div class="src">https://www.dailywire.com/news/erika-kirk-elected-to-lead-turning-point-usa-as-ceo-and-board-chair</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:32</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/exclusive-new-blackburn-bill-would-end-barbaric-transgender-procedures-nationwide">https://www.dailywire.com/news/exclusive-new-blackburn-bill-would-end-barbaric-transgender-procedures-nationwide</a></h3>
+  <p class="snip">EXCLUSIVE: New Blackburn Bill Would End ‘Barbaric’ Transgender Procedures Nationwide Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies All Acces</p>
+  <div class="src">https://www.dailywire.com/news/exclusive-new-blackburn-bill-would-end-barbaric-transgender-procedures-nationwide</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:32</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/trump-admin-demands-nyc-cops-hand-over-illegal-accused-of-killing-teen-who-rejected-sexual-advances">https://www.dailywire.com/news/trump-admin-demands-nyc-cops-hand-over-illegal-accused-of-killing-teen-who-rejected-sexual-advances</a></h3>
+  <p class="snip">Trump Admin Demands NYC Cops Hand Over Illegal Accused Of Killing Teen Who Rejected Sexual Advances Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; M</p>
+  <div class="src">https://www.dailywire.com/news/trump-admin-demands-nyc-cops-hand-over-illegal-accused-of-killing-teen-who-rejected-sexual-advances</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:31</div>
+  <h3 class="ttl"><a href="https://www.dailywire.com/news/a-page-right-out-of-xis-playbook-dems-and-media-talking-heads-lose-it-over-kimmel-ouster">https://www.dailywire.com/news/a-page-right-out-of-xis-playbook-dems-and-media-talking-heads-lose-it-over-kimmel-ouster</a></h3>
+  <p class="snip">‘A Page Right Out Of Xi’s Playbook’: Dems And Media Talking Heads Lose It Over Kimmel Ouster Shows &amp; Movies All Access Shop Kids Gift Membership Download App Search Log In Sign Up Menu Close Download the Daily Wire App Home Shows &amp; Movies A</p>
+  <div class="src">https://www.dailywire.com/news/a-page-right-out-of-xis-playbook-dems-and-media-talking-heads-lose-it-over-kimmel-ouster</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">pagesix.com</span> <span class="count">(5 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:19</div>
+  <h3 class="ttl"><a href="https://pagesix.com/2025/09/20/celebrity-news/reese-witherspoon-reflects-on-past-abusive-relationship-that-diminished-her-spirit/">Reese Witherspoon reflects on past abusive relationship that &#x27;diminished&#x27; her spirit</a></h3>
+  <p class="snip">Reese Witherspoon reflects on past abusive relationship that &#x27;diminished&#x27; her spirit Primary Menu Sections News Entertainment Page Swift TV Virtual Reali-Tea VRT Awards 2025 Movies Music Awards Sports Lifestyle Travel Real Estate Page Six S</p>
+  <div class="src">https://pagesix.com/2025/09/20/celebrity-news/reese-witherspoon-reflects-on-past-abusive-relationship-that-diminished-her-spirit/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:03</div>
+  <h3 class="ttl"><a href="https://pagesix.com/2025/09/20/celebrity-news/priscilla-presley-spills-on-lisa-marie-michael-jacksons-sex-life/">Priscilla Presley spills on Lisa Marie, Michael Jackson&#x27;s sex life</a></h3>
+  <p class="snip">Priscilla Presley spills on Lisa Marie, Michael Jackson&#x27;s sex life Primary Menu Sections News Entertainment Page Swift TV Virtual Reali-Tea VRT Awards 2025 Movies Music Awards Sports Lifestyle Travel Real Estate Page Six Style Fashion Beaut</p>
+  <div class="src">https://pagesix.com/2025/09/20/celebrity-news/priscilla-presley-spills-on-lisa-marie-michael-jacksons-sex-life/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:50</div>
+  <h3 class="ttl"><a href="https://pagesix.com/2025/09/20/celebrity-news/kyle-richards-daughter-sophia-umansky-peed-her-underwear-at-alexias-wedding/">Kyle Richards&#x27; daughter Sophia Umansky peed her underwear at Alexia&#x27;s wedding</a></h3>
+  <p class="snip">Kyle Richards&#x27; daughter Sophia Umansky peed her underwear at Alexia&#x27;s wedding Primary Menu Sections News Entertainment Page Swift TV Virtual Reali-Tea VRT Awards 2025 Movies Music Awards Sports Lifestyle Travel Real Estate Page Six Style Fa</p>
+  <div class="src">https://pagesix.com/2025/09/20/celebrity-news/kyle-richards-daughter-sophia-umansky-peed-her-underwear-at-alexias-wedding/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:06</div>
+  <h3 class="ttl"><a href="https://pagesix.com/2025/09/20/style/venus-williams-wears-all-white-and-custom-mrs-hat-ahead-of-wedding-to-andre-preti-in-italy/">Venus Williams wears all-white and custom &#x27;Mrs&#x27; hat ahead of wedding to Andre Preti in Italy</a></h3>
+  <p class="snip">Venus Williams wears all-white and custom &#x27;Mrs&#x27; hat ahead of wedding to Andre Preti in Italy Primary Menu Sections News Entertainment Page Swift TV Virtual Reali-Tea VRT Awards 2025 Movies Music Awards Sports Lifestyle Travel Real Estate Pa</p>
+  <div class="src">https://pagesix.com/2025/09/20/style/venus-williams-wears-all-white-and-custom-mrs-hat-ahead-of-wedding-to-andre-preti-in-italy/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:58</div>
+  <h3 class="ttl"><a href="https://pagesix.com/2025/09/20/celebrity-news/patrick-brittany-mahomes-enjoy-date-night-at-his-and-travis-kelces-new-restaurant/">Patrick, Brittany Mahomes enjoy date night at his and Travis Kelce&#x27;s new restaurant</a></h3>
+  <p class="snip">Patrick, Brittany Mahomes enjoy date night at his and Travis Kelce&#x27;s new restaurant Primary Menu Sections News Entertainment Page Swift TV Virtual Reali-Tea VRT Awards 2025 Movies Music Awards Sports Lifestyle Travel Real Estate Page Six St</p>
+  <div class="src">https://pagesix.com/2025/09/20/celebrity-news/patrick-brittany-mahomes-enjoy-date-night-at-his-and-travis-kelces-new-restaurant/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">breitbart.com</span> <span class="count">(83 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:17</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/economy/2025/09/19/toyota-recalling-nearly-600000-vehicles-fix-defective-warning-panel/">Toyota Recalling Nearly 600,000 Vehicles To Fix Defective Warning Panel</a></h3>
+  <p class="snip">Toyota Recalling Nearly 600,000 Vehicles To Fix Defective Warning Panel Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel / Middle East Africa Asia Latin Americ</p>
+  <div class="src">https://www.breitbart.com/economy/2025/09/19/toyota-recalling-nearly-600000-vehicles-fix-defective-warning-panel/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:16</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/immigration/2025/09/20/watch-agents-and-protesters-rumble-at-chicago-ice-protest/">Watch: Agents and Protesters Rumble at Chicago ICE Protest with Three Arrests and Multiple Injuries</a></h3>
+  <p class="snip">Watch: Agents and Protesters Rumble at Chicago ICE Protest with Three Arrests and Multiple Injuries Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel / Middle E</p>
+  <div class="src">https://www.breitbart.com/immigration/2025/09/20/watch-agents-and-protesters-rumble-at-chicago-ice-protest/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:16</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/clips/2025/09/20/columbia-j-school-dean-msnbcs-cobb-biden-covid-censorship-different-due-to-public-health-exception/">Columbia J School Dean, MSNBC&amp;#039;s Cobb: Biden COVID Censorship Different Due to &amp;#039;Public Health Exception&amp;#039;</a></h3>
+  <p class="snip">Columbia J School Dean, MSNBC&#x27;s Cobb: Biden COVID Censorship Different Due to &#x27;Public Health Exception&#x27; Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel / Midd</p>
+  <div class="src">https://www.breitbart.com/clips/2025/09/20/columbia-j-school-dean-msnbcs-cobb-biden-covid-censorship-different-due-to-public-health-exception/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:16</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/clips/2025/09/20/maher-democratic-party-appears-to-be-going-the-way-of-the-democratic-socialist-party/">Maher: Democratic Party Appears &amp;#039;to Be Going the Way of the Democratic Socialist Party&amp;#039;</a></h3>
+  <p class="snip">Maher: Democratic Party Appears &#x27;to Be Going the Way of the Democratic Socialist Party&#x27; Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel / Middle East Africa A</p>
+  <div class="src">https://www.breitbart.com/clips/2025/09/20/maher-democratic-party-appears-to-be-going-the-way-of-the-democratic-socialist-party/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:15</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/clips/2025/09/20/marlow-low-rated-kimmel-benched-by-abc-because-he-would-have-doubled-down-on-lies-hate-amid-wave-of-violencemarlow-low-rated-kimmel-benched-by-abc-because-he-would-have-doubled-down-on-lies-hate-a/">Marlow: Low-Rated Kimmel Benched by ABC Because He Would Have Doubled Down on Lies, Hate Amid Wave of Violence</a></h3>
+  <p class="snip">Marlow: Low-Rated Kimmel Benched by ABC Because He Would Have Doubled Down on Lies, Hate Amid Wave of Violence Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel</p>
+  <div class="src">https://www.breitbart.com/clips/2025/09/20/marlow-low-rated-kimmel-benched-by-abc-because-he-would-have-doubled-down-on-lies-hate-amid-wave-of-violencemarlow-low-rated-kimmel-benched-by-abc-because-he-would-have-doubled-down-on-lies-hate-a/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:15</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/radio/2025/09/20/exclusive-rep-byron-donalds-left-has-a-radical-element-leading-to-political-violence-that-is-a-fact/">Exclusive — Rep. Byron Donalds: Left Has a Radical Element Leading to Political Violence; &amp;#039;That Is a Fact&amp;#039;</a></h3>
+  <p class="snip">Exclusive — Rep. Byron Donalds: Left Has a Radical Element Leading to Political Violence; &#x27;That Is a Fact&#x27; Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel / M</p>
+  <div class="src">https://www.breitbart.com/radio/2025/09/20/exclusive-rep-byron-donalds-left-has-a-radical-element-leading-to-political-violence-that-is-a-fact/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:15</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/the-media/2025/09/20/the-media-is-lying-about-what-jimmy-kimmel-said-like-they-lied-about-iryna-zarutskas-death/">The Media Is Lying About What Jimmy Kimmel Said, Like They Lied About Iryna Zarutska&amp;#039;s Death</a></h3>
+  <p class="snip">The Media Is Lying About What Jimmy Kimmel Said, Like They Lied About Iryna Zarutska&#x27;s Death Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel / Middle East Afr</p>
+  <div class="src">https://www.breitbart.com/the-media/2025/09/20/the-media-is-lying-about-what-jimmy-kimmel-said-like-they-lied-about-iryna-zarutskas-death/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:14</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/radio/2025/09/20/exclusive-turning-point-usas-andrew-kolvet-people-around-the-world-are-going-to-hear-the-gospel-of-jesus-during-charlie-kirks-memorial/">Exclusive — Turning Point USA&amp;#039;s Andrew Kolvet: &amp;#039;People Around the World Are Going to Hear the Gospel of Jesus&amp;#039; During Charlie Kirk&amp;#039;s Memorial</a></h3>
+  <p class="snip">Exclusive — Turning Point USA&#x27;s Andrew Kolvet: &#x27;People Around the World Are Going to Hear the Gospel of Jesus&#x27; During Charlie Kirk&#x27;s Memorial Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Bo</p>
+  <div class="src">https://www.breitbart.com/radio/2025/09/20/exclusive-turning-point-usas-andrew-kolvet-people-around-the-world-are-going-to-hear-the-gospel-of-jesus-during-charlie-kirks-memorial/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:14</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/radio/2025/09/20/exclusive-turning-point-usas-andrew-kolvet-this-is-a-spiritual-fight/">Exclusive -- Turning Point USA&amp;#039;s Andrew Kolvet: This Is a Spiritual Fight</a></h3>
+  <p class="snip">Exclusive -- Turning Point USA&#x27;s Andrew Kolvet: This Is a Spiritual Fight Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel / Middle East Africa Asia Latin Amer</p>
+  <div class="src">https://www.breitbart.com/radio/2025/09/20/exclusive-turning-point-usas-andrew-kolvet-this-is-a-spiritual-fight/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:14</div>
+  <h3 class="ttl"><a href="https://www.breitbart.com/politics/2025/09/20/exclusive-jason-miller-charlie-kirk-memorial-vigils-show-the-impact-his-movement-will-continue-to-have/">Exclusive — Jason Miller: Charlie Kirk Memorial, Vigils Show the Impact His Movement &amp;#039;Will Continue to Have&amp;#039;</a></h3>
+  <p class="snip">Exclusive — Jason Miller: Charlie Kirk Memorial, Vigils Show the Impact His Movement &#x27;Will Continue to Have&#x27; Enable Accessibility Skip to Content Politics Entertainment Media Economy World London / Europe Border / Cartel Chronicles Israel /</p>
+  <div class="src">https://www.breitbart.com/politics/2025/09/20/exclusive-jason-miller-charlie-kirk-memorial-vigils-show-the-impact-his-movement-will-continue-to-have/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">apnews.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:13</div>
+  <h3 class="ttl"><a href="https://apnews.com/article/california-ice-agents-immigration-raids-masks-ban-97936f70699b75d8b483a850967c2e42">California restricts use of masks by most law enforcement officers | AP News</a></h3>
+  <p class="snip">California restricts use of masks by most law enforcement officers | AP News Menu World SECTIONS Israel-Hamas war Russia-Ukraine war Español China Asia Pacific Latin America Europe Africa TOP STORIES Russian jets over Estonia ignored signal</p>
+  <div class="src">https://apnews.com/article/california-ice-agents-immigration-raids-masks-ban-97936f70699b75d8b483a850967c2e42</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">mirror.co.uk</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:13</div>
+  <h3 class="ttl"><a href="https://www.mirror.co.uk/news/us-news/ghislaine-maxwell-pictured-first-time-35934324?s">Ghislaine Maxwell pictured for first time since sex trafficker was moved to cushy jail - The Mirror</a></h3>
+  <p class="snip">Ghislaine Maxwell pictured for first time since sex trafficker was moved to cushy jail - The Mirror ‌ ‌ Skip to main content News Celebs Football Lifestyle More InYourArea Funeral Notices Shop Competitions Dating Offers Newsletter Signup Fo</p>
+  <div class="src">https://www.mirror.co.uk/news/us-news/ghislaine-maxwell-pictured-first-time-35934324?s</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">deadline.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:12</div>
+  <h3 class="ttl"><a href="https://deadline.com/2025/09/gavin-newsom-no-ice-masks-law-trump-jimmy-kimmel-1236551531/">Gavin Newson Bans Masked ICE Agents In California In Trump Rebuke</a></h3>
+  <p class="snip">Gavin Newson Bans Masked ICE Agents In California In Trump Rebuke Skip to main content Open Mega Menu Got A Tip? deadline-logo-svg Deadline Follow Us: site categories TV Film Awards Awards Hub Digital Issues Box Office Biz International Pol</p>
+  <div class="src">https://deadline.com/2025/09/gavin-newsom-no-ice-masks-law-trump-jimmy-kimmel-1236551531/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">nytimes.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:11</div>
+  <h3 class="ttl"><a href="https://www.nytimes.com/video/us/politics/100000010409626/trump-escalates-attack-on-free-speech.html">https://www.nytimes.com/video/us/politics/100000010409626/trump-escalates-attack-on-free-speech.html</a></h3>
+  <p class="snip">Trump Escalates Attack on Free Speech - The New York Times Skip to content Skip to site index new video loaded: Trump Escalates Attack on Free Speech Trump Escalates Attack on Free Speech By Zolan Kanno-Youngs, Christina Thornell and David </p>
+  <div class="src">https://www.nytimes.com/video/us/politics/100000010409626/trump-escalates-attack-on-free-speech.html</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">nbcnews.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:11</div>
+  <h3 class="ttl"><a href="https://www.nbcnews.com/politics/justice-department/no-evidence-charlie-kirk-shooting-left-wing-groups-rcna232513">Live</a></h3>
+  <p class="snip">&#x27;No evidence&#x27; found yet of ties between Charlie Kirk&#x27;s shooting and left-wing groups, officials say IE 11 is not supported. For an optimal experience visit our site on another browser. Skip to Content NBC News Logo U.S. News Politics World </p>
+  <div class="src">https://www.nbcnews.com/politics/justice-department/no-evidence-charlie-kirk-shooting-left-wing-groups-rcna232513</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">foxnews.com</span> <span class="count">(15 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:10</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/media/texas-superintendent-outraged-after-teachers-called-demons-alleged-social-media-post">Texas superintendent defends teachers after they were called &amp;#x27;demons&amp;#x27; | Fox News</a></h3>
+  <p class="snip">Texas superintendent defends teachers after they were called &#x27;demons&#x27; | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Crime B</p>
+  <div class="src">https://www.foxnews.com/media/texas-superintendent-outraged-after-teachers-called-demons-alleged-social-media-post</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:10</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/world/massive-wwii-bomb-forces-overnight-evacuation-6000-residents-from-homes">Thousands evacuated in Hong Kong after 1,000-pound WWII bomb discovered | Fox News</a></h3>
+  <p class="snip">Thousands evacuated in Hong Kong after 1,000-pound WWII bomb discovered | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Crime</p>
+  <div class="src">https://www.foxnews.com/world/massive-wwii-bomb-forces-overnight-evacuation-6000-residents-from-homes</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:09</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/health/study-reveals-condition-thats-more-dangerous-than-obesity">Major new study shows extra pounds may not be as harmful as thought | Fox News</a></h3>
+  <p class="snip">Major new study shows extra pounds may not be as harmful as thought | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Crime Bry</p>
+  <div class="src">https://www.foxnews.com/health/study-reveals-condition-thats-more-dangerous-than-obesity</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:09</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/politics/gavin-newsom-press-office-post-kristi-noem-triggers-secret-service-threat-assessment-referral">Newsom press office social media post about Noem sparks threat assessment | Fox News</a></h3>
+  <p class="snip">Newsom press office social media post about Noem sparks threat assessment | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Cri</p>
+  <div class="src">https://www.foxnews.com/politics/gavin-newsom-press-office-post-kristi-noem-triggers-secret-service-threat-assessment-referral</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:58</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/sports/famed-mlb-scout-59-found-dead-hotel-after-apparent-heart-attack-report">MLB news: Famed scout Scott Littlefield dead at 59  | Fox News</a></h3>
+  <p class="snip">MLB news: Famed scout Scott Littlefield dead at 59 | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Crime Bryan Kohberger Luig</p>
+  <div class="src">https://www.foxnews.com/sports/famed-mlb-scout-59-found-dead-hotel-after-apparent-heart-attack-report</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:58</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/sports/nhl-star-reveals-fiancee-received-heart-transplant-after-suffering-major-heart-failure-during-vacation">Sabres star Rasmus Dahlin reveals fiancée&amp;#x27;s heart transplant during France trip | Fox News</a></h3>
+  <p class="snip">Sabres star Rasmus Dahlin reveals fiancée&#x27;s heart transplant during France trip | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror Tr</p>
+  <div class="src">https://www.foxnews.com/sports/nhl-star-reveals-fiancee-received-heart-transplant-after-suffering-major-heart-failure-during-vacation</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:58</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/sports/nfl-looks-officiate-tight-chiefs-game-review-video-renews-tush-push-scrutiny-report">Eagles&amp;#x27; controversial &amp;#x27;tush push&amp;#x27; under review after NFL officiating video | Fox News</a></h3>
+  <p class="snip">Eagles&#x27; controversial &#x27;tush push&#x27; under review after NFL officiating video | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Cr</p>
+  <div class="src">https://www.foxnews.com/sports/nfl-looks-officiate-tight-chiefs-game-review-video-renews-tush-push-scrutiny-report</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:57</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/sports/california-high-school-volleyball-team-trans-athlete-sees-more-forfeits-following-lawsuit-teammates">California high school volleyball forfeits continue amid trans dispute | Fox News</a></h3>
+  <p class="snip">California high school volleyball forfeits continue amid trans dispute | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Crime </p>
+  <div class="src">https://www.foxnews.com/sports/california-high-school-volleyball-team-trans-athlete-sees-more-forfeits-following-lawsuit-teammates</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:57</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/media/how-watch-charlie-kirks-memorial-service">How to watch Fox&amp;#x27;s coverage of Charlie Kirk&amp;#x27;s memorial service in Arizona | Fox News</a></h3>
+  <p class="snip">How to watch Fox&#x27;s coverage of Charlie Kirk&#x27;s memorial service in Arizona | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True Cri</p>
+  <div class="src">https://www.foxnews.com/media/how-watch-charlie-kirks-memorial-service</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:57</div>
+  <h3 class="ttl"><a href="https://www.foxnews.com/sports/north-texas-football-player-pulls-off-epic-stone-cold-steve-austin-beer-celebration">UNT football player pulls off celebration of alum &amp;#x27;Stone Cold&amp;#x27; Steve Austin | Fox News</a></h3>
+  <p class="snip">UNT football player pulls off celebration of alum &#x27;Stone Cold&#x27; Steve Austin | Fox News Fox News Media Fox News Media Fox Business Fox Nation Fox News Audio Fox Weather Outkick Fox Noticias Books Fox News U.S. Crime Immigration Terror True C</p>
+  <div class="src">https://www.foxnews.com/sports/north-texas-football-player-pulls-off-epic-stone-cold-steve-austin-beer-celebration</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">decider.com</span> <span class="count">(3 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:07</div>
+  <h3 class="ttl"><a href="https://decider.com/2025/09/20/wwe-wrestlepalooza-where-to-watch-espn-fubotv-hulu-youtubetv/">Where To Watch WWE Wrestlepalooza: Start Time, Card, How To Watch Wrestlepalooza On ESPN, Hulu, FuboTV, and More</a></h3>
+  <p class="snip">Where To Watch WWE Wrestlepalooza: Start Time, Card, How To Watch Wrestlepalooza On ESPN, Hulu, FuboTV, and More Skip to main content Menu Decider Decider What to Watch Find: Movies Shows What&#x27;s Streaming On: HBO Max Netflix Peacock More Se</p>
+  <div class="src">https://decider.com/2025/09/20/wwe-wrestlepalooza-where-to-watch-espn-fubotv-hulu-youtubetv/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:55</div>
+  <h3 class="ttl"><a href="https://decider.com/2025/09/20/tulsa-king-season-3-release-date-new-episodes-how-to-watch-paramount-plus/">Where To Watch &amp;#8216;Tulsa King&amp;#8217; Season 3: Release Date, Start Time, Episodes, Streaming Info | Decider</a></h3>
+  <p class="snip">Where To Watch ‘Tulsa King’ Season 3: Release Date, Start Time, Episodes, Streaming Info | Decider Skip to main content Menu Decider Decider What to Watch Find: Movies Shows What&#x27;s Streaming On: HBO Max Netflix Peacock More Search Discover </p>
+  <div class="src">https://decider.com/2025/09/20/tulsa-king-season-3-release-date-new-episodes-how-to-watch-paramount-plus/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:13</div>
+  <h3 class="ttl"><a href="https://decider.com/2025/09/20/peacemaker-cast-season-2-episode-5/">&amp;#8216;Peacemaker&amp;#8217; Cast Tease What&amp;#8217;s Ahead After Cliffhanger Episode 5 Ending: &amp;#8220;The Episodes Go So Hard In The Last Three&amp;#8221; | Decider</a></h3>
+  <p class="snip">‘Peacemaker’ Cast Tease What’s Ahead After Cliffhanger Episode 5 Ending: “The Episodes Go So Hard In The Last Three” | Decider Skip to main content Menu Decider Decider What to Watch Find: Movies Shows What&#x27;s Streaming On: HBO Max Netflix P</p>
+  <div class="src">https://decider.com/2025/09/20/peacemaker-cast-season-2-episode-5/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">dailycaller.com</span> <span class="count">(23 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:02</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/20/police-arrest-suspectanibal-hernandezsantana-abc-news-station-shooting/">Police Arrest Suspect In ABC News Station Shooting | 
+		The Daily Caller</a></h3>
+  <p class="snip">Police Arrest Suspect In ABC News Station Shooting | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content Newsletters Watch Operation Deportation Stream D</p>
+  <div class="src">https://dailycaller.com/2025/09/20/police-arrest-suspectanibal-hernandezsantana-abc-news-station-shooting/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:02</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/20/opinion-geoengineering-is-real-and-its-spectacular-david-blackmon/">DAVID BLACKMON: Geoengineering Is Real, And It’s Spectacular | 
+		The Daily Caller</a></h3>
+  <p class="snip">DAVID BLACKMON: Geoengineering Is Real, And It’s Spectacular | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content Newsletters Watch Operation Deportatio</p>
+  <div class="src">https://dailycaller.com/2025/09/20/opinion-geoengineering-is-real-and-its-spectacular-david-blackmon/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:02</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/20/tennessee-volunteers-uab-blazers-college-football/">This Is By Far Our Weirdest College Football Game Of 2025 | 
+		The Daily Caller</a></h3>
+  <p class="snip">This Is By Far Our Weirdest College Football Game Of 2025 | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content Newsletters Watch Operation Deportation S</p>
+  <div class="src">https://dailycaller.com/2025/09/20/tennessee-volunteers-uab-blazers-college-football/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:56</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/19/report-gunfire-strikes-california-abc-local-news-station-building/">REPORT: Gunfire Strikes California ABC Local News Station Building | 
+		The Daily Caller</a></h3>
+  <p class="snip">REPORT: Gunfire Strikes California ABC Local News Station Building | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content Newsletters Watch Operation Depo</p>
+  <div class="src">https://dailycaller.com/2025/09/19/report-gunfire-strikes-california-abc-local-news-station-building/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:56</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/19/alex-acosta-james-comer-house-oversight-bill-barr-trump-jeffrey-epstein/">Alex Acosta Finally Reveals Why He Offered Plea Deal To Epstein | 
+		The Daily Caller</a></h3>
+  <p class="snip">Alex Acosta Finally Reveals Why He Offered Plea Deal To Epstein | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content Newsletters Watch Operation Deporta</p>
+  <div class="src">https://dailycaller.com/2025/09/19/alex-acosta-james-comer-house-oversight-bill-barr-trump-jeffrey-epstein/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:55</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/19/dana-white-ufc-event-white-house/">‘We’re Literally Going To Take Over Washington, DC’: Dana White Previews UFC Event At White House | 
+		The Daily Caller</a></h3>
+  <p class="snip">‘We’re Literally Going To Take Over Washington, DC’: Dana White Previews UFC Event At White House | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content N</p>
+  <div class="src">https://dailycaller.com/2025/09/19/dana-white-ufc-event-white-house/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:55</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/19/emanuell-cooks-mississippi-delta-community-college-football-death/">Player Dies Following College Football Game In Mississippi | 
+		The Daily Caller</a></h3>
+  <p class="snip">Player Dies Following College Football Game In Mississippi | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content Newsletters Watch Operation Deportation </p>
+  <div class="src">https://dailycaller.com/2025/09/19/emanuell-cooks-mississippi-delta-community-college-football-death/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:55</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/19/mike-johnson-charlie-kirk-resolution-democrats/">‘Shameful’: Mike Johnson Shares What Was In Resolution Honoring Charlie Kirk That Many Democrats Refused To Support | 
+		The Daily Caller</a></h3>
+  <p class="snip">‘Shameful’: Mike Johnson Shares What Was In Resolution Honoring Charlie Kirk That Many Democrats Refused To Support | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas</p>
+  <div class="src">https://dailycaller.com/2025/09/19/mike-johnson-charlie-kirk-resolution-democrats/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:54</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/19/heritage-foundation-charlie-kirk-tribute/">EXCLUSIVE: Heritage Foundation Unveils Major Tribute To Charlie Kirk | 
+		The Daily Caller</a></h3>
+  <p class="snip">EXCLUSIVE: Heritage Foundation Unveils Major Tribute To Charlie Kirk | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Premium Content Newsletters Watch Operation De</p>
+  <div class="src">https://dailycaller.com/2025/09/19/heritage-foundation-charlie-kirk-tribute/</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:16:54</div>
+  <h3 class="ttl"><a href="https://dailycaller.com/2025/09/19/jesse-watters-tells-jessica-tarlov-democrats-fascist-label-republicans/">‘It Reminds Me Of Little Kids’: Jesse Watters Tells Tarlov Why He No Longer Cares When Liberals Scream ‘Fascist’ | 
+		The Daily Caller</a></h3>
+  <p class="snip">‘It Reminds Me Of Little Kids’: Jesse Watters Tells Tarlov Why He No Longer Cares When Liberals Scream ‘Fascist’ | The Daily Caller My Account Read Politics US World Entertainment Sports Business Education Op-Eds Two Sides Big Tent Ideas Pr</p>
+  <div class="src">https://dailycaller.com/2025/09/19/jesse-watters-tells-jessica-tarlov-democrats-fascist-label-republicans/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">theverge.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:01</div>
+  <h3 class="ttl"><a href="https://www.theverge.com/news/782258/amazon-google-microsoft-warn-h-1b-employees-return-to-the-us">Amazon, Google, and Microsoft tell H-1B employees to rush back to the US | The Verge</a></h3>
+  <p class="snip">Amazon, Google, and Microsoft tell H-1B employees to rush back to the US | The Verge Skip to main content The homepage The Verge The Verge logo. The Verge The Verge logo. Tech Reviews Science Entertainment AI Hamburger Navigation Button The</p>
+  <div class="src">https://www.theverge.com/news/782258/amazon-google-microsoft-warn-h-1b-employees-return-to-the-us</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">zerohedge.com</span> <span class="count">(4 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:01</div>
+  <h3 class="ttl"><a href="https://www.zerohedge.com/markets/sec-backs-trumps-proposal-shift-earnings-reports-quarterly-semiannual">SEC Backs Trump&amp;#x27;s Proposal To Shift Earnings Reports From Quarterly To Semiannual | ZeroHedge</a></h3>
+  <p class="snip">SEC Backs Trump&#x27;s Proposal To Shift Earnings Reports From Quarterly To Semiannual | ZeroHedge Home Join Premium Contributors Channels All Partners The Market Ear SpotGamma Store Donate More RSS About Advertise Debates Zerohedge Debates Zero</p>
+  <div class="src">https://www.zerohedge.com/markets/sec-backs-trumps-proposal-shift-earnings-reports-quarterly-semiannual</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:18:01</div>
+  <h3 class="ttl"><a href="https://www.zerohedge.com/political/educational-crisis-baltimore-high-school-fails-produce-single-proficient-math-student">Educational Crisis: Baltimore High School Fails To Produce A Single Proficient Math Student In Four Straight Years | ZeroHedge</a></h3>
+  <p class="snip">Educational Crisis: Baltimore High School Fails To Produce A Single Proficient Math Student In Four Straight Years | ZeroHedge Home Join Premium Contributors Channels All Partners The Market Ear SpotGamma Store Donate More RSS About Adverti</p>
+  <div class="src">https://www.zerohedge.com/political/educational-crisis-baltimore-high-school-fails-produce-single-proficient-math-student</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:39</div>
+  <h3 class="ttl"><a href="https://www.zerohedge.com/technology/americans-will-hold-6-7-board-seats-tiktoks-us-operations-oracle-biggest-winner">Americans Will Hold 6 Of 7 Board Seats On TikTok&amp;#x27;s US Operations; Oracle Biggest Winner | ZeroHedge</a></h3>
+  <p class="snip">Americans Will Hold 6 Of 7 Board Seats On TikTok&#x27;s US Operations; Oracle Biggest Winner | ZeroHedge Home Join Premium Contributors Channels All Partners The Market Ear SpotGamma Store Donate More RSS About Advertise Debates Zerohedge Debate</p>
+  <div class="src">https://www.zerohedge.com/technology/americans-will-hold-6-7-board-seats-tiktoks-us-operations-oracle-biggest-winner</div>
+</article><article class="card">
+  <div class="meta">2025-09-20 22:17:38</div>
+  <h3 class="ttl"><a href="https://www.zerohedge.com/political/great-leaders-dont-ignore-red-flags">Great Leaders Don&amp;#x27;t Ignore Red Flags | ZeroHedge</a></h3>
+  <p class="snip">Great Leaders Don&#x27;t Ignore Red Flags | ZeroHedge Home Join Premium Contributors Channels All Partners The Market Ear SpotGamma Store Donate More RSS About Advertise Debates Zerohedge Debates ZeroHedge Reads Alt-Market AntiWar.com Bitcoin Ma</p>
+  <div class="src">https://www.zerohedge.com/political/great-leaders-dont-ignore-red-flags</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">barrons.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:18:00</div>
+  <h3 class="ttl"><a href="https://www.barrons.com/news/venezuelan-leader-s-youtube-channel-disappears-edf589f9">https://www.barrons.com/news/venezuelan-leader-s-youtube-channel-disappears-edf589f9</a></h3>
+  <p class="snip">Venezuelan Leader&#x27;s YouTube Channel Disappears - Barron&#x27;s Skip to Main Content Explore Our Brands WSJ Barron&#x27;s MarketWatch IBD WSJ | Buy Side Search News &amp; Quotes FROM AFP NEWS Venezuelan Leader&#x27;s YouTube Channel Disappears By AFP - Agence </p>
+  <div class="src">https://www.barrons.com/news/venezuelan-leader-s-youtube-channel-disappears-edf589f9</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">variety.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:17:59</div>
+  <h3 class="ttl"><a href="https://variety.com/2025/tv/news/jimmy-kimmel-abc-disney-late-night-comeback-1236524695/">Jimmy Kimmel, Disney Work Toward Compromise to Bring Show Back to ABC</a></h3>
+  <p class="snip">Jimmy Kimmel, Disney Work Toward Compromise to Bring Show Back to ABC Jimmy Kimmel, Disney Work Toward Compromise to Bring Show Back to ABC Plus Icon Film Plus Icon TV Plus Icon What To Watch Plus Icon Music Plus Icon Docs Plus Icon Digital</p>
+  <div class="src">https://variety.com/2025/tv/news/jimmy-kimmel-abc-disney-late-night-comeback-1236524695/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">thehill.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:17:38</div>
+  <h3 class="ttl"><a href="https://thehill.com/opinion/judiciary/5513010-supreme-court-trump-ruling/">Trump&#x27;s defiance of Supreme Court could backfire</a></h3>
+  <p class="snip">Trump&#x27;s defiance of Supreme Court could backfire Skip to content Toggle Menu Read The Paper Sign Up Account Profile Log Out Newsletters Morning Report 12:30 Report Evening Report Business Defense Health Care Technology Energy &amp; Environment </p>
+  <div class="src">https://thehill.com/opinion/judiciary/5513010-supreme-court-trump-ruling/</div>
+</article></div>
+</section>
+
+<section class="feedrow">
+  <div class="rowhead"><span class="host">abcnews.go.com</span> <span class="count">(1 new)</span></div>
+  <div class="strip nowrap"><article class="card">
+  <div class="meta">2025-09-20 22:17:35</div>
+  <h3 class="ttl"><a href="https://abcnews.go.com/US/armed-man-arrested-stadium-ahead-charlie-kirk-memorial/story?id=125770798">https://abcnews.go.com/US/armed-man-arrested-stadium-ahead-charlie-kirk-memorial/story?id=125770798</a></h3>
+  <p class="snip">Armed man arrested at stadium ahead of Charlie Kirk memorial in Arizona: Officials - ABC News ABC News Live Video Shows Shop Interest Successfully Added We&#x27;ll notify you here with news about Turn on desktop notifications for breaking storie</p>
+  <div class="src">https://abcnews.go.com/US/armed-man-arrested-stadium-ahead-charlie-kirk-memorial/story?id=125770798</div>
+</article></div>
+</section>
+
+</main>
+<footer>Built 2025-09-20 18:36:34</footer>

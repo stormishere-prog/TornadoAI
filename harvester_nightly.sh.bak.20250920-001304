@@ -1,0 +1,91 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -eu
+
+ROOT="/storage/emulated/0/Download/TornadoAI"
+cd "$ROOT" || exit 1
+
+LOG="$ROOT/harvester.log"
+PIDFILE="$ROOT/harvester.pid"
+DAILY_STAMP="$ROOT/.daily_foia_ran"
+WEEKLY_STAMP="$ROOT/.weekly_media_ran"
+
+# Config (overridable via env)
+WINDOW_START_HOUR="${WINDOW_START_HOUR:-2}"   # 2 AM
+WINDOW_END_HOUR="${WINDOW_END_HOUR:-3}"       # 3 AM
+VIDEO_WEEKDAY="${VIDEO_WEEKDAY:-Sun}"         # weekly media pass day
+MAX_PER_TAG="${MAX_PER_TAG:-2}"               # how many new hits per tag per run
+ALERTS_BASENAME="${ALERTS_BASENAME:-alerts}"  # alerts.{log,jsonl}
+
+touch "$LOG"
+
+# single-instance guard
+if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+  echo "[harvester] already running (pid=$(cat "$PIDFILE"))" >> "$LOG"
+  exit 0
+fi
+echo $$ > "$PIDFILE"
+
+in_window() {
+  HOUR=$(date +%H | sed 's/^0*//'); [ -z "$HOUR" ] && HOUR=0
+  [ "$HOUR" -ge "$WINDOW_START_HOUR" ] && [ "$HOUR" -le "$WINDOW_END_HOUR" ]
+}
+
+is_today() {
+  FILE="$1"; [ ! -f "$FILE" ] && return 1
+  STAMP=$(cat "$FILE" 2>/dev/null || echo 0)
+  STAMP_DAY=$(date -d "@$STAMP" +%Y-%m-%d 2>/dev/null || busybox date -D "%s" -d "$STAMP" +%Y-%m-%d)
+  [ "$STAMP_DAY" = "$(date +%Y-%m-%d)" ]
+}
+
+is_this_week() {
+  FILE="$1"; [ ! -f "$FILE" ] && return 1
+  STAMP=$(cat "$FILE" 2>/dev/null || echo 0)
+  STAMP_WEEK=$(date -d "@$STAMP" +%G-%V 2>/dev/null || busybox date -D "%s" -d "$STAMP" +%G-%V)
+  [ "$STAMP_WEEK" = "$(date +%G-%V)" ]
+}
+
+while :; do
+  # Keep schema healthy each wake (via safe_run guard)
+  sh ./safe_run.sh python3 migrate.py >>"$LOG" 2>&1 || true
+
+  if in_window; then
+    NOW_DAY=$(date +%a)
+
+    # ---------- DAILY ----------
+    if ! is_today "$DAILY_STAMP"; then
+      echo "[harvester][$(date -Is)] NIGHTLY: daily PDF crawl+ingest" >>"$LOG"
+      sh ./safe_run.sh python3 foia_deep.py --limit-items 120 --limit-pdfs 400 --list-pages 10 >>"$LOG" 2>&1 || true
+      sh ./safe_run.sh python3 fetch_and_ingest.py >>"$LOG" 2>python3 fetch_and_ingest.py >>"$LOG" 2>&1 || true1 || true
+sh ./safe_run.sh python3 watchlist_scan.py --max-per-tag 1 --alerts alerts >>"$LOG" 2>&1 || true
+sh ./safe_run.sh python3 alerts_daily_report.py --hours 24 >>"$LOG" 2>&1 || true
+sh ./case_packets_nightly.sh >>"$LOG" 2>&1 || true
+sh ./post_ingest.sh >>"$LOG" 2>python3 fetch_and_ingest.py >>"$LOG" 2>&1 || true1 || true
+sh ./case_packets_nightly.sh >>"$LOG" 2>&1 || true
+
+      # NEW: scan watchlist after ingest
+      echo "[harvester][$(date -Is)] WATCHLIST: daily scan" >>"$LOG"
+      sh ./safe_run.sh python3 watchlist_scan.py --max-per-tag "$MAX_PER_TAG" --alerts "$ALERTS_BASENAME" >>"$LOG" 2>&1 || true
+
+      date +%s > "$DAILY_STAMP"
+    fi
+
+    # ---------- WEEKLY MEDIA ----------
+    if [ "$NOW_DAY" = "$VIDEO_WEEKDAY" ] && ! is_this_week "$WEEKLY_STAMP"; then
+      echo "[harvester][$(date -Is)] NIGHTLY: weekly media pass" >>"$LOG"
+      sh ./safe_run.sh python3 foia_deep.py --limit-items 200 --limit-pdfs 600 --list-pages 15 >>"$LOG" 2>&1 || true
+      sh ./safe_run.sh python3 fetch_and_ingest.py >>"$LOG" 2>python3 fetch_and_ingest.py >>"$LOG" 2>&1 || true1 || true
+sh ./post_ingest.sh >>"$LOG" 2>python3 fetch_and_ingest.py >>"$LOG" 2>&1 || true1 || true
+
+      # NEW: scan watchlist after the weekly deeper pass
+      echo "[harvester][$(date -Is)] WATCHLIST: weekly scan" >>"$LOG"
+      sh ./safe_run.sh python3 watchlist_scan.py --max-per-tag "$MAX_PER_TAG" --alerts "$ALERTS_BASENAME" >>"$LOG" 2>&1 || true
+
+      date +%s > "$WEEKLY_STAMP"
+    fi
+
+    # avoid re-running within the same window
+    sleep 3600
+  else
+    sleep 300  # check every 5 minutes
+  fi
+done

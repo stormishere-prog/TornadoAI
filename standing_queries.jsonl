@@ -1,0 +1,4 @@
+{"tag":"CharlieKirk/all","query":"\"Charlie Kirk\"","urlfilter":"%","case":"Charlie Kirk / All Sources","priority":3,"note":"standing watch","tags":"watch,charlie","limit":3}
+{"tag":"Epstein/all","query":"\"Jeffrey Epstein\" OR Epstein","urlfilter":"%","case":"Epstein","priority":3,"note":"standing watch","tags":"watch,epstein","limit":3}
+{"tag":"FISA702","query":"\"Section 702\" minimization OR querying","urlfilter":"%","case":"FISA 702 / Minimization","priority":2,"note":"standing watch","tags":"watch,702","limit":5}
+{"tag":"COINTELPRO","query":"COINTELPRO OR \"Counter Intelligence Program\"","urlfilter":"https://vault.fbi.gov/%","case":"COINTELPRO","priority":2,"note":"standing watch","tags":"watch,cointelpro","limit":5}

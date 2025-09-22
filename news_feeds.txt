@@ -1,0 +1,52 @@
+# Wires / mainstream
+https://www.reuters.com/rssFeed/worldNews
+https://www.reuters.com/rssFeed/politicsNews
+https://apnews.com/hub/ap-top-news?utm_source=apnews&utm_medium=rss
+https://apnews.com/hub/politics?utm_source=apnews&utm_medium=rss
+https://feeds.abcnews.com/abcnews/topstories
+https://feeds.foxnews.com/foxnews/latest
+https://www.nbcnews.com/id/3032091/device/rss/rss.xml
+https://rss.cnn.com/rss/cnn_topstories.rss
+https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml
+https://feeds.feedburner.com/DrudgeReportFeed
+
+# Policy / DC beat
+https://thehill.com/feed/
+https://www.politico.com/rss/politics-news.xml
+https://rssfeeds.usatoday.com/usatoday-NewsTopStories
+https://www.axios.com/feeds/feed.rss
+
+# Gov press rooms
+https://www.whitehouse.gov/briefing-room/feed/
+https://www.justice.gov/opa/press-releases?&amp;f%5B0%5D=type%3Apress_release&amp;f%5B1%5D=field_date%3A1&amp;sort_by=field_date&sort_order=DESC&amp;_format=feed
+https://www.dni.gov/index.php/newsroom/press-releases?format=feed&amp;type=rss
+https://www.cia.gov/press-releases-statements/feed/
+https://www.fbi.gov/news/pressrel/press-releases/@@RSS
+https://www.dhs.gov/news-releases/feed
+
+# Tech / natsec
+https://www.theverge.com/rss/index.xml
+https://arstechnica.com/feed/
+https://www.schneier.com/feed/atom/
+
+# Add your own feeds below (one per line)
+# --- Independent / watchdog ---
+https://theintercept.com/feed/?lang=en
+https://consortiumnews.com/feed/
+https://feeds.feedburner.com/zerohedge/feed
+
+# --- Right-leaning / populist ---
+https://www.breitbart.com/feed/
+https://dailycaller.com/feed/
+https://www.washingtonexaminer.com/section/rss/all
+https://nypost.com/feed/
+https://www.dailywire.com/feeds/rss.xml
+# --- Foreign / geopolitical ---
+https://www.rt.com/rss/news/               # Russia
+https://english.alarabiya.net/.mrss/en.xml # Middle East
+https://www.aljazeera.com/xml/rss/all.xml  # Qatar / Global South
+https://www.globaltimes.cn/rss/world.xml   # China
+https://tass.com/rss/v2.xml                # Russian official
+https://www.scmp.com/rss/91/feed           # Hong Kong
+https://www.dw.com/english/rss             # Germany
+https://www.ft.com/?format=rss             # UK / Global markets
